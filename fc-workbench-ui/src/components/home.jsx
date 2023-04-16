@@ -1,21 +1,19 @@
-import {useState} from "react";
+import {Requests} from '../Requests'
+import {Link} from 'react-router-dom'
 
 export function Home() {
-    const [url, setUrl] = useState("https://dev.vepara.com.tr/public/swagger/1.0.0.1/swagger.json");
+    const REQUESTS = new Requests();
 
-    const handleChange = (e) => {
-        setUrl(e.target.value);
-    }
 
     return <>
-        <h2>fc-workbench</h2>
+        <h1>fc-workbench</h1>
         <div>
+            <h2>Workbench = 1</h2>
             <div>
-                <input id="txtOpenApi" type="url" value={url} onChange={handleChange}
-                       style={{width: '98vw'}}/>
+                <Link to={"/import-adapter"}>Import Adapter</Link>
             </div>
             <div>
-                <button>Adapter Olustur</button>
+                <Link to={"/adapters"}>Adapters</Link>
             </div>
         </div>
     </>

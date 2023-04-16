@@ -12,10 +12,18 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <None Remove="appsettings.json" />
+      <Content Include="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="FCMicroservices" Version="0.3.9.11" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FCAdapterEngine\FCAdapterEngine.csproj" />
     </ItemGroup>
 
 </Project>

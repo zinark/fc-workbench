@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCAdapterEngine", "FCAdapte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCAdapterEngine.Tests", "FCAdapterEngine.Tests\FCAdapterEngine.Tests.csproj", "{94F27607-7E17-4B47-8000-0A1579C7B70C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCWorkbench", "FCWorkbench\FCWorkbench.csproj", "{E763BA5C-3963-4E5B-8425-41C6C79E70FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCWorkbench.Api", "FCWorkbench.Api\FCWorkbench.Api.csproj", "{928ACC54-FD64-4457-B75D-FE2E3A73F503}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{94F27607-7E17-4B47-8000-0A1579C7B70C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94F27607-7E17-4B47-8000-0A1579C7B70C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94F27607-7E17-4B47-8000-0A1579C7B70C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E763BA5C-3963-4E5B-8425-41C6C79E70FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E763BA5C-3963-4E5B-8425-41C6C79E70FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E763BA5C-3963-4E5B-8425-41C6C79E70FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E763BA5C-3963-4E5B-8425-41C6C79E70FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{928ACC54-FD64-4457-B75D-FE2E3A73F503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{928ACC54-FD64-4457-B75D-FE2E3A73F503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{928ACC54-FD64-4457-B75D-FE2E3A73F503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{928ACC54-FD64-4457-B75D-FE2E3A73F503}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
