@@ -11,9 +11,27 @@ export function Adapters() {
         setAdapters(reply.adapters);
     };
 
-    const RenderAdapter = (x) => {
+    const RenderVariable = (v) => {
+        return <li> {v.adapterKey} [{v.type}]</li>
+    };
+    const RenderPart = (part) => {
+        return <li>
+            {part.name} ({part.variables.length})
+            <ul>
+                {part.variables.map(RenderVariable)}
+            </ul>
+        </li>
+    };
+    const RenderRequest = (req) => {
+        return <li> {req.method} {req.code} </li>
+    };
+    const RenderAdapter = (adapter) => {
         return <>
-            <h1>{x.name}</h1>
+            <h1>{adapter.name}</h1>
+            <h2>Requests</h2>
+            {adapter.requests.map(RenderRequest)}
+            <h2>Parts</h2>
+            {adapter.parts.map(RenderPart)}
         </>
     };
 
