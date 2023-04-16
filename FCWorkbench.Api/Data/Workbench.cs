@@ -10,12 +10,20 @@ public class Workbench
     public string AdaptersJson { get; set; } = "[]";
     public string ScreensJson { get; set; } = "[]";
 
-    public List<Adapter> Adapters () => AdaptersJson?.ParseJson<List<Adapter>>();
+    public List<Adapter> Adapters() => AdaptersJson?.ParseJson<List<Adapter>>();
+    public List<Screen> Screens() => ScreensJson?.ParseJson<List<Screen>>();
 
     public void AddAdapter(Adapter adapter)
     {
         var adapters = Adapters();
         adapters.Add(adapter);
         AdaptersJson = adapters.ToJson();
+    }
+
+    public void AddScreen(Screen adapter)
+    {
+        var screens = Screens();
+        screens.Add(adapter);
+        ScreensJson = screens.ToJson();
     }
 }

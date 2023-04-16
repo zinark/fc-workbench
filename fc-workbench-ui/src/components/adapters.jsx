@@ -7,7 +7,7 @@ export function Adapters() {
     const [adapters, setAdapters] = useState([]);
 
     const handleOnLoad = async () => {
-        let reply = await REQUESTS.listAdapters(1);
+        let reply = await REQUESTS.searchAdapters(1);
         setAdapters(reply.adapters);
     };
 
@@ -29,9 +29,14 @@ export function Adapters() {
         return <>
             <h1>{adapter.name}</h1>
             <h2>Requests</h2>
-            {adapter.requests.map(RenderRequest)}
+            <ul>
+                {adapter.requests.map(RenderRequest)}
+            </ul>
+
             <h2>Parts</h2>
-            {adapter.parts.map(RenderPart)}
+            <ul>
+                {adapter.parts.map(RenderPart)}
+            </ul>
         </>
     };
 

@@ -18,7 +18,7 @@ public class WorkbenchController : Controller
     {
         return _bus.Handle(input) as ImportAdapterReply;
     }
-    
+
     [HttpPost("search-adapters")]
     public SearchAdaptersReply SearchAdapters(SearchAdapters input)
     {
@@ -30,5 +30,10 @@ public class WorkbenchController : Controller
     {
         return _bus.Handle(input) as SetupReply;
     }
-    
+
+    [HttpPost("get-workbench")]
+    public GetWorkbenchReply GetWorkbench(GetWorkbench input)
+    {
+        return _bus.Handle(input) as GetWorkbenchReply;
+    }
 }

@@ -15,6 +15,9 @@ export function Home() {
             <div>
                 <Link to={"/adapters"}>Adapters</Link>
             </div>
+            <div>
+                <Link to={"/screens"}>Screens</Link>
+            </div>
         </div>
     </>
 }

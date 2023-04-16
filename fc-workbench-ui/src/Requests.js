@@ -3,7 +3,7 @@ export class Requests {
 
     async importAdapter(workbenchId, baseUrl, openApiJsonUrl) {
         var data = {
-            "workbenchId" : workbenchId,
+            "workbenchId": workbenchId,
             "baseUrl": baseUrl,
             "openApiUrl": openApiJsonUrl
         };
@@ -24,9 +24,9 @@ export class Requests {
         return reply;
     }
 
-    async listAdapters(workbenchId) {
+    async searchAdapters(workbenchId) {
         var data = {
-            "workbenchId" : workbenchId,
+            "workbenchId": workbenchId,
         };
         let body = JSON.stringify(data);
 
@@ -41,7 +41,47 @@ export class Requests {
         };
         let response = await fetch(url, fetchParameters);
         var reply = await response.json();
-        console.info(reply)
         return reply;
     }
+
+    async searchScreens(workbenchId) {
+        var data = {
+            "workbenchId": workbenchId,
+        };
+        let body = JSON.stringify(data);
+
+        let url = this.API_URL + "/search-screens";
+        let fetchParameters = {
+            method: "POST",
+            headers: new Headers({
+                'content-type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            }),
+            body: body
+        };
+        let response = await fetch(url, fetchParameters);
+        var reply = await response.json();
+        return reply;
+    }
+
+    async getWorkbench(workbenchId) {
+        var data = {
+            "Id": workbenchId,
+        };
+        let body = JSON.stringify(data);
+
+        let url = this.API_URL + "/get-workbench";
+        let fetchParameters = {
+            method: "POST",
+            headers: new Headers({
+                'content-type': 'application/json',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            }),
+            body: body
+        };
+        let response = await fetch(url, fetchParameters);
+        var reply = await response.json();
+        return reply;
+    }
+
 }
