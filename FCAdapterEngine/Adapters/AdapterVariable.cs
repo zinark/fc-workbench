@@ -4,7 +4,7 @@ using FCHttpRequestEngine.Extensions;
 
 namespace FCHttpRequestEngine.Adapters
 {
-    public class AdapterVariable
+    public class AdapterVariable : HasUniqueId
     {
         public string Type { get; set; }
         public bool IsRequired { get; set; } = false;

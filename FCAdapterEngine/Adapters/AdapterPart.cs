@@ -1,9 +1,10 @@
 ﻿namespace FCHttpRequestEngine.Adapters
 {
-    public class AdapterPart
+    public class AdapterPart : HasUniqueId
     {
         public string Name { get; set; }
-        public List<AdapterVariable> Variables { get; set; } = new List<AdapterVariable>();
+        public List<AdapterVariable> Variables { get; set; } = new();
+
         public AdapterPart AddVariable(AdapterVariable variable)
         {
             variable.Order = Variables.Count + 1;

@@ -9,5 +9,9 @@ public class ScreenItem
     public string Text { get; set; } = "Text";
     public string Align { get; set; }
     public string Type { get; set; }
-    public string TargetScreenId { get; set; }
+    
+    public string? AdapterVariableId { get; set; }
+    public string? AdapterRequestCode { get; set; }
+    public string? OnSuccess { get; set; }
+    public string? OnFailed { get; set; }
 }
