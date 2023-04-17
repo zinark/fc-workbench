@@ -104,7 +104,7 @@ public class SetupHandler : Handler<Setup, SetupReply>
                     Type = "Label",
                     Text = "Ana Sayfa",
                     X = 1, Y = 1, Width = 5, Height = 1,
-                    Align = "Center"
+                    Align = "Center",
                 },
                 new ScreenItem()
                 {
@@ -112,7 +112,7 @@ public class SetupHandler : Handler<Setup, SetupReply>
                     Text = "Giris Yap",
                     X = 1, Y = 2, Width = 5, Height = 1,
                     Align = "Center",
-                    TargetScreenId = loginScreenId
+                    OnSuccess = loginScreenId
                 },
                 new ScreenItem()
                 {
@@ -120,7 +120,7 @@ public class SetupHandler : Handler<Setup, SetupReply>
                     Text = "Parola Unuttum",
                     X = 1, Y = 3, Width = 5, Height = 1,
                     Align = "Center",
-                    TargetScreenId = resetPasswordScreenId
+                    OnSuccess = resetPasswordScreenId
                 },
                 new ScreenItem()
                 {
@@ -128,7 +128,7 @@ public class SetupHandler : Handler<Setup, SetupReply>
                     Text = "Yeni uyelik",
                     X = 1, Y = 4, Width = 5, Height = 1,
                     Align = "Center",
-                    TargetScreenId = newMemberScreenId
+                    OnSuccess = newMemberScreenId
                 }
             }
         };

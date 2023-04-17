@@ -20,7 +20,8 @@ public class GetWorkbenchHandler : Handler<GetWorkbench, GetWorkbenchReply>
         {
             Id = bench.Id,
             Adapters = bench.Adapters(),
-            Screens = bench.Screens()
+            Screens = bench.Screens(),
+            Variables = bench.Variables()
         };
     }
 

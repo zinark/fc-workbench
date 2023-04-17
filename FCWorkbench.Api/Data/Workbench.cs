@@ -13,6 +13,34 @@ public class Workbench
     public List<Adapter> Adapters() => AdaptersJson?.ParseJson<List<Adapter>>();
     public List<Screen> Screens() => ScreensJson?.ParseJson<List<Screen>>();
 
+    public List<object> Variables()
+    {
+        var list = new List<object>();
+
+        var adapters = Adapters();
+        foreach (var adapter in adapters)
+        {
+            foreach (var part in adapter.Parts)
+            {
+                var variables = part.Variables;
+
+                foreach (var variable in variables)
+                {
+                    list.Add(new
+                    {
+                        Variable = variable,
+                        PartId = part.Id,
+                        PartName = part.Name,
+                        AdapterId = adapter.Id,
+                        AdapterName = adapter.Name
+                    });
+                }
+            }
+        }
+
+        return list;
+    }
+
     public void AddAdapter(Adapter adapter)
     {
         var adapters = Adapters();

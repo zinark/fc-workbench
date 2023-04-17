@@ -3,7 +3,7 @@ using FCHttpRequestEngine.Extensions;
 
 namespace FCHttpRequestEngine.Adapters
 {
-    public class Adapter
+    public class Adapter : HasUniqueId
     {
         public (int code, string response, object description) Execute(string requestCode, AdapterValueStore valueStore)
         {
