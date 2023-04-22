@@ -80,13 +80,17 @@ public class SetupHandler : Handler<Setup, SetupReply>
                 {
                     Type = "Input",
                     Text = "Parola",
-                    X = 1, Y = 2, Width = 5, Height = 1
+                    X = 1, Y = 2, Width = 5, Height = 1,
                 },
                 new ScreenItem()
                 {
                     Type = "Button",
                     Text = "Devam",
                     X = 1, Y = 3, Width = 5, Height = 1,
+                },
+                new ScreenItem()
+                {
+                    
                 }
             }
         };

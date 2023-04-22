@@ -10,6 +10,8 @@ public class Workbench
     public string AdaptersJson { get; set; } = "[]";
     public string ScreensJson { get; set; } = "[]";
 
+    public Dictionary<string, string> Parameters { get; set; } = new();
+
     public List<Adapter> Adapters() => AdaptersJson?.ParseJson<List<Adapter>>();
     public List<Screen> Screens() => ScreensJson?.ParseJson<List<Screen>>();
 
