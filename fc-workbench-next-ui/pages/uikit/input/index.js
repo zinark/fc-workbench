@@ -37,7 +37,7 @@ export const InputDemo = () => {
     const [radioValue, setRadioValue] = useState(null);
     const [checkboxValue, setCheckboxValue] = useState([]);
     const [switchValue, setSwitchValue] = useState(false);
-    const [listboxValue, setListboxValue] = useState(null);
+    const [ listboxValue, setListboxValue] = useState(null);
     const [dropdownValue, setDropdownValue] = useState(null);
     const [multiselectValue, setMultiselectValue] = useState(null);
     const [toggleValue, setToggleValue] = useState(false);
