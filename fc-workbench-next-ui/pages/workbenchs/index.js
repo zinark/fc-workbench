@@ -131,14 +131,14 @@ const Workbenchs = () => {
 
                     </div>
                     <div className="flex align-items-center justify-content-between">
-                        <Link href={"/delete/3"}>
+                        <Link href={"/delete/" + data.id}>
                             <Button icon="pi pi-trash" tooltip={"Delete"} severity="danger" outlined/>
                         </Link>
 
-                        <Link href={"/run/3"}>
+                        <Link href={"/run/" + data.id}>
                             <Button icon="pi pi-arrow-circle-right" severity="success" tooltip={"Run"} rounded/>
                         </Link>
-                        <Link href={"/workbench/3"}>
+                        <Link href={"/workbench/" + data.id}>
                             <Button icon="pi pi-file-edit" tooltip={"Edit"} outlined/>
                         </Link>
                     </div>

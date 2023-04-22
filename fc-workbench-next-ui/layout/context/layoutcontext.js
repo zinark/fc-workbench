@@ -9,7 +9,7 @@ export const LayoutProvider = (props) => {
         menuMode: 'static',
         colorScheme: 'light',
         theme: 'lara-light-indigo',
-        scale: 18
+        scale: 12
     });
 
     const [layoutState, setLayoutState] = useState({
