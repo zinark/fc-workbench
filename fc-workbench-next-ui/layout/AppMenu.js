@@ -25,12 +25,12 @@ const AppMenu = () => {
                 {
                     label: 'wallet sample',
                     icon: 'pi pi-fw pi-bookmark',
-                    // to: '/workbench/1'
+                    // to: '/fc-workbench/1'
                 },
                 {
                     label: 'auth sample',
                     icon: 'pi pi-fw pi-bookmark',
-                    // to: '/workbench/2'
+                    // to: '/fc-workbench/2'
                 }
             ]
         },

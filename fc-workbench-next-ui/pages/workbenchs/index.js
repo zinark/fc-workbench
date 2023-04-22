@@ -8,16 +8,6 @@ import {WorkbenchService} from "../../fc-workbench/service/WorkbenchService";
 import Link from 'next/link'
 
 const Workbenchs = () => {
-    const listValue = [
-        {name: 'San Francisco', code: 'SF'},
-        {name: 'London', code: 'LDN'},
-        {name: 'Paris', code: 'PRS'},
-        {name: 'Istanbul', code: 'IST'},
-        {name: 'Berlin', code: 'BRL'},
-        {name: 'Barcelona', code: 'BRC'},
-        {name: 'Rome', code: 'RM'}
-    ];
-
     const [dataViewValue, setDataViewValue] = useState([]);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [filteredValue, setFilteredValue] = useState(null);
@@ -87,6 +77,7 @@ const Workbenchs = () => {
                     <img src={`/demo/images/product/${data.image}`} alt={data.name}
                          className="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5"/>
                     <div className="flex-1 flex flex-column align-items-center text-center md:text-left">
+                        <Link href={"/workbench/" + data.id}>Ferhat</Link>
                         <div className="font-bold text-2xl">{data.name}</div>
                         <div className="mb-2">{data.description}</div>
                         <Rating value={data.rating} readOnly cancel={false} className="mb-2"></Rating>
@@ -123,23 +114,22 @@ const Workbenchs = () => {
                     <div className="flex flex-column align-items-center text-center mb-3">
                         {/*<img src={`/demo/images/product/${data.image}`} alt={data.name}*/}
                         {/*     className="w-9 shadow-2 my-3 mx-0"/>*/}
-                        <div className="text-2xl font-bold">{data.name}</div>
+
+                        <div className="text-2xl font-bold"><Link href={"/workbench/" + data.id}>{data.name}</Link>
+                        </div>
                         <div className="mb-3">{data.description}</div>
                         {/*<Rating value={data.rating} readOnly cancel={false}/>*/}
                         <span className="font-semibold">{data.screens.length} screen(s)</span>
                         <span className="font-semibold">{data.adapters.length} adapter(s)</span>
 
                     </div>
-                    <div className="flex align-items-center justify-content-between">
-                        <Link href={"/delete/" + data.id}>
-                            <Button icon="pi pi-trash" tooltip={"Delete"} severity="danger" outlined/>
-                        </Link>
+                    <div className="flex align-items-center justify-content-center">
+                        {/*<Link href={"/delete/" + data.id}>*/}
+                        {/*    <Button icon="pi pi-trash" tooltip={"Delete"} severity="danger" outlined/>*/}
+                        {/*</Link>*/}
 
                         <Link href={"/run/" + data.id}>
                             <Button icon="pi pi-arrow-circle-right" severity="success" tooltip={"Run"} rounded/>
-                        </Link>
-                        <Link href={"/workbench/" + data.id}>
-                            <Button icon="pi pi-file-edit" tooltip={"Edit"} outlined/>
                         </Link>
                     </div>
                 </div>
@@ -176,10 +166,6 @@ const Workbenchs = () => {
                     </div>
                 </div>
             </div>
-            {/*<pre>*/}
-            {/*    DATA :*/}
-            {/*    {JSON.stringify(dataViewValue, null, 4)}*/}
-            {/*</pre>*/}
         </>
     );
 };
