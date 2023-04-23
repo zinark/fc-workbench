@@ -6,7 +6,9 @@ import {TabPanel, TabView} from "primereact/tabview";
 import CodeEditor from "../../fc-workbench/components/CodeEditor";
 import {BreadCrumb} from "primereact/breadcrumb";
 import {Menubar} from "primereact/menubar";
-
+import {Chip} from "primereact/chip";
+import {InputText} from "primereact/inputtext";
+import {RadioButton} from "primereact/radiobutton";
 
 const Screen = () => {
 
@@ -72,7 +74,7 @@ const Screen = () => {
         }
     ];
 
-    const ScreenLink = (props) => {
+    const LinkForAScreen = (props) => {
         let data = props.screens;
         if (!data) return
         return <div>
@@ -94,13 +96,55 @@ const Screen = () => {
             height: `${item.height * 10}px`,
         }
 
-        return <div className="fc"> {item.text} </div>
+        let types = ["Label", "Link", "Button", "Input"];
+
+        const handleScreenItemTextChange = (item, value) => {
+            console.log (item, value);
+        };
+
+        return <div className="card m-3 p-6 border-1 border-300">
+            <div className="grid">
+                <div className="col-3">
+                    <InputText type="text"
+                               value={item.text}
+                               onChange={e => handleScreenItemTextChange(item, e.target.value)}
+                               placeholder={item.type}/>
+                </div>
+
+                <div className="col-3">
+                    <Chip label={item.type}></Chip>
+                </div>
+
+                <div className="grid col-6">
+                    {types.map(x => {
+                        return <div key={x} className="col-12 md:col-3">
+                            <div className="field-radiobutton">
+                                <RadioButton inputId="option1" name="option" value={x}
+                                    // checked={radioValue === 'Chicago'}
+                                    // onChange={(e) => setRadioValue(e.value)}
+                                />
+                                <label htmlFor="option1">{x}</label>
+                            </div>
+
+                        </div>
+                    })}
+                </div>
+            </div>
+
+
+        </div>
     }
     const ScreenEditor = () => {
         if (!screen) return
         if (!screen.items) return
+
         return <div>
-            {screen.items.map(x => <ScreenItem key={x.id} item={x}/>)}
+            <Menubar model={screenEditMenuItems}></Menubar>
+
+            <div className="card">
+                {screen.items.map(x => <ScreenItem key={x.id} item={x}/>)}
+            </div>
+
         </div>
     }
 
@@ -111,19 +155,28 @@ const Screen = () => {
 
         return <div className="card">
             <div className="grid">
+
                 <div className="col-11">
+
                     <h2>{screen.title}</h2>
+
                     <TabView>
+
                         <TabPanel header="Screen">
                             <ScreenEditor/>
                         </TabPanel>
+
                         <TabPanel header="Json">
-                            <CodeEditor code={JSON.stringify(screen)}/>
+                            <CodeEditor object={screen}/>
                         </TabPanel>
+
                     </TabView>
+
                 </div>
+
                 <div className="col-1">
-                    {bench.screens.map(x => <ScreenLink key={x.id} screens={x}/>)}
+                    <h4>Screens</h4>
+                    {bench.screens.map(x => <LinkForAScreen key={x.id} screens={x}/>)}
                 </div>
             </div>
         </div>
@@ -131,9 +184,7 @@ const Screen = () => {
     }
 
     return <div>
-        <pre>{wid} / {sid}</pre>
         <BreadCrumb home={breadcrumbHome} model={breadcrumbItems}/>
-        <Menubar model={screenEditMenuItems}></Menubar>
         <ScreenPanel/>
     </div>
 }
