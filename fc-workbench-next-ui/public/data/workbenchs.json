@@ -14,8 +14,16 @@
       "user1_Password": "1000",
       "user2_Mail": "user2@mail.com",
       "user2_Phone": "5070414888",
-      "user2_Password": "2000"
+      "user2_Password": "2000",
+      "user1_walletCode": "W-1",
+      "user2_walletCode": "W-2",
+      "partner_walletCode": "W-P"
     },
+    "tags": [
+      "admin",
+      "user",
+      "partner"
+    ],
     "screens": [
       {
         "id": "4F1976009FAB4720B5707679B33E8FA2",
