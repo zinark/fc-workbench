@@ -9,6 +9,7 @@ import {Menubar} from "primereact/menubar";
 import ScreenItem from "../../fc-workbench/components/ScreenItem";
 import linq from 'linqjs'
 import {Utils} from "../../fc-workbench/service/Utils";
+import ScreenMobileView from "../../fc-workbench/components/ScreenMobileView";
 
 let l = linq
 
@@ -50,25 +51,45 @@ const Screen = () => {
         ]);
     }, [bench, screen, wid, sid])
 
-    const handleNewLabel = () => {
-        const newItem = {
-            text: 'new',
-            type: 'Label',
-            refNo: Utils.Guid()
-        }
+    const addScreenItem = (newItem) => {
         const newItems = [...screen.items, newItem]
         const newScreen = {...screen}
         newScreen.items = newItems
         setScreen(newScreen)
-    }
-    const handleNewLink = () => {
 
     }
+    const handleNewLabel = () => {
+        const newItem = {
+            text: 'new label',
+            type: 'Label',
+            refNo: Utils.Guid()
+        }
+        addScreenItem(newItem)
+    }
+    const handleNewLink = () => {
+        const newItem = {
+            text: 'new link',
+            type: 'Link',
+            refNo: Utils.Guid()
+        }
+        addScreenItem(newItem)
+    }
     const handleNewButton = () => {
+        const newItem = {
+            text: 'new button',
+            type: 'Button',
+            refNo: Utils.Guid()
+        }
+        addScreenItem(newItem)
 
     }
     const handleNewInput = () => {
-
+        const newItem = {
+            text: 'new input',
+            type: 'Input',
+            refNo: Utils.Guid()
+        }
+        addScreenItem(newItem)
     }
     const handleSave = () => {
     }
@@ -137,16 +158,7 @@ const Screen = () => {
             </div>
 
             <div className="grid mt-8 pb-2">
-                <div className="col-12 flex flex-column align-items-center text-center bg-gray-100">
-
-                    <div
-                        className="flex flex-column bg-purple-50 p-4 m-4 border-2 border-300 align-items-center align-content-center"
-                        style={{minWidth: "320px", minHeight: "600px", borderRadius: "30px"}}>
-
-                        {screen.items.map((scrItem, ix) => <ScreenItem key={ix} data={scrItem}/>)}
-
-                    </div>
-                </div>
+                <ScreenMobileView screen={screen} zoom="100%"/>
             </div>
         </div>
     }
@@ -188,7 +200,6 @@ const Screen = () => {
     }
 
     return <div>
-        <h1>{screen && screen.title}</h1>
         <BreadCrumb home={breadcrumbHome} model={breadcrumbItems}/>
         <ScreenPanel/>
     </div>

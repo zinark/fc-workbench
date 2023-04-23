@@ -9,6 +9,7 @@ import {Button} from "primereact/button";
 import {BreadCrumb} from "primereact/breadcrumb";
 import {Menu} from "primereact/menu";
 import CodeEditor from "../../fc-workbench/components/CodeEditor";
+import ScreenMobileView from "../../fc-workbench/components/ScreenMobileView";
 
 const Workbench = (props) => {
     const [bench, setBench] = useState([]);
@@ -185,8 +186,16 @@ const Workbench = (props) => {
     }
     const ScreenGrid = () => {
         if (!bench.screens) return
+
         return <div className="grid">
-            {bench.screens.map(x => <ScreenGridView key={x.id} screen={x}/>)}
+            {bench.screens.map(x => <div key={x.id}
+                                         className="card border-0 m-1 p-2 flex flex-column align-content-center align-items-center">
+                <Link href={"/screen/" + bench.id + "/" + x.refNo}>
+                    <div className="text-2xl font-bold"> {x.title} </div>
+                </Link>
+
+                <ScreenMobileView key={x.id} screen={x} zoom="75%"/>
+            </div>)}
         </div>
     }
     const AdapterGrid = () => {
