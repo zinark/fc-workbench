@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 Microservice
     .Create(args)
-    .UseDbContext<WorkbenchContext>()
+    .UseDbContext<WorkbenchDbContext>()
     .WithComponents(x => { x.AddTransient<OpenApiImporter>(); })
     .OverrideServices(svc =>
     {

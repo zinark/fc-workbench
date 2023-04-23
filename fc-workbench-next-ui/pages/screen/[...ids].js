@@ -30,7 +30,7 @@ const Screen = () => {
             setSid(ids[1])
             for (let ix in bench.screens) {
                 let scr = bench.screens[ix];
-                if (scr.id !== id1) continue;
+                if (scr.refNo !== id1) continue;
                 setScreen(scr)
                 break;
             }
@@ -42,7 +42,7 @@ const Screen = () => {
     const breadcrumbHome = {icon: 'pi pi-home', to: '/'};
     const breadcrumbItems = [
         {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
-        {label: <Link href={"/workbench/" + wid}> {bench && bench.name} </Link>},
+        {label: <Link href={"/workbench/" + wid}> {bench && bench.title} </Link>},
         {label: <Link href={"/screen/" + wid + "/" + sid}> {screen && screen.title} </Link>}
     ];
     const screenEditMenuItems = [

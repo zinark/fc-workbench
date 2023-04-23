@@ -10,7 +10,7 @@ namespace FCWorkbench.Api.Controllers;
 public class ImportAdapterHandler : Handler<ImportAdapter, ImportAdapterReply>
 {
     private readonly OpenApiImporter _importer;
-    private readonly IDbContextFactory<WorkbenchContext> _ctxFactory;
+    private readonly IDbContextFactory<WorkbenchDbContext> _ctxFactory;
 
     public override ImportAdapterReply Handle(ImportAdapter input)
     {
@@ -30,7 +30,7 @@ public class ImportAdapterHandler : Handler<ImportAdapter, ImportAdapterReply>
         };
     }
 
-    public ImportAdapterHandler(OpenApiImporter importer, IDbContextFactory<WorkbenchContext> ctxFactory)
+    public ImportAdapterHandler(OpenApiImporter importer, IDbContextFactory<WorkbenchDbContext> ctxFactory)
     {
         _importer = importer;
         _ctxFactory = ctxFactory;

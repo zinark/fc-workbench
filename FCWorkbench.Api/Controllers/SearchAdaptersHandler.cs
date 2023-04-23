@@ -8,7 +8,7 @@ namespace FCWorkbench.Api.Controllers;
 public class SearchAdaptersHandler : Handler<SearchAdapters, SearchAdaptersReply>
 {
     private readonly OpenApiImporter _importer;
-    private readonly IDbContextFactory<WorkbenchContext> _ctxFactory;
+    private readonly IDbContextFactory<WorkbenchDbContext> _ctxFactory;
 
     public override SearchAdaptersReply Handle(SearchAdapters input)
     {
@@ -23,7 +23,7 @@ public class SearchAdaptersHandler : Handler<SearchAdapters, SearchAdaptersReply
         };
     }
 
-    public SearchAdaptersHandler(OpenApiImporter importer, IDbContextFactory<WorkbenchContext> ctxFactory)
+    public SearchAdaptersHandler(OpenApiImporter importer, IDbContextFactory<WorkbenchDbContext> ctxFactory)
     {
         _importer = importer;
         _ctxFactory = ctxFactory;

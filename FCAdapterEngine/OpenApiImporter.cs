@@ -20,6 +20,7 @@ public class OpenApiImporter
 
         Adapter adapter = Adapter.Create(doc.Info.Title);
 
+        AdapterPart part = adapter.CreatePart("INTERNAL");
         foreach (KeyValuePair<string, OpenApiPathItem> pathitem in doc.Paths)
         {
             var pathUrl = pathitem.Key;
@@ -29,7 +30,8 @@ public class OpenApiImporter
             IDictionary<OperationType, OpenApiOperation>? operations = path.Operations;
 
             AdapterRequest req = adapter.CreateRequest(pathUrl, "${BASE_URL}" + pathUrl);
-            AdapterPart part = adapter.CreatePart(pathUrl.Replace("/", "_").Replace("-", "").ToUpper().Trim('_'));
+            var modPath = pathUrl.Replace("/", "_").Replace("-", "").ToLowerInvariant().Trim('_');
+
             req.Title = pathUrl;
 
             foreach (var operationItem in operations)
@@ -52,13 +54,12 @@ public class OpenApiImporter
                         var contentType = bc.Key;
                         OpenApiSchema? schema = bc.Value.Schema;
 
-                        var r = schema.Reference.ReferenceV3;
                         // Console.WriteLine("* REQUEST " + schema.Reference.ReferenceV3);
                         var dict = ConvertToProps(schema.Properties);
 
                         foreach (var (prop, type) in dict)
                         {
-                            var modProp = part.Name + "_" + prop;
+                            var modProp = modPath + "_" + prop;
                             modProp = modProp.ToLowerInvariant();
                             AdapterVariable variable = null;
                             if (type.ToString() == "integer")

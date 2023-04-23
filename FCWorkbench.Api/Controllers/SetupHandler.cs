@@ -7,7 +7,7 @@ namespace FCWorkbench.Api.Controllers;
 
 public class SetupHandler : Handler<Setup, SetupReply>
 {
-    private readonly IDbContextFactory<WorkbenchContext> _ctxFactory;
+    private readonly IDbContextFactory<WorkbenchDbContext> _ctxFactory;
     private readonly EnterpriseBus _bus;
 
     public override SetupReply Handle(Setup input)
@@ -21,7 +21,7 @@ public class SetupHandler : Handler<Setup, SetupReply>
         Screen screenLogin = MakeScreenLogin();
         Screen screenResetPassword = MakeScreenResetPassword();
         Screen screenRegistration = MakeScreenRegistration();
-        Screen screenHome = MakeScreenHome(screenLogin.Id, screenResetPassword.Id, screenRegistration.Id);
+        Screen screenHome = MakeScreenHome(screenLogin.RefNo, screenResetPassword.RefNo, screenRegistration.RefNo);
 
         bench.AddScreen(screenHome);
         bench.AddScreen(screenResetPassword);
@@ -35,13 +35,13 @@ public class SetupHandler : Handler<Setup, SetupReply>
         {
             WorkbenchId = 1,
             BaseUrl = "https://dev.vepara.com.tr/public",
-            OpenApiUrl = "https://dev.vepara.com.tr/public/swagger/1.0.0.1/swagger.json"
+            OpenApiUrl = "https://dev.vepara.com.tr/public/swagger/1.0.0.2/swagger.json"
         });
         _bus.Handle(new ImportAdapter()
         {
             WorkbenchId = 1,
             BaseUrl = "https://dev.vepara.com.tr/wallet",
-            OpenApiUrl = "https://dev.vepara.com.tr/wallet/swagger/1.0.0.1/swagger.json"
+            OpenApiUrl = "https://dev.vepara.com.tr/wallet/swagger/1.0.0.2/swagger.json"
         });
 
         return new SetupReply();
@@ -74,29 +74,37 @@ public class SetupHandler : Handler<Setup, SetupReply>
                 {
                     Type = "Input",
                     Text = "Telefon",
-                    X = 1, Y = 1, Width = 5, Height = 1
+                    Properties = new Dictionary<string, object>()
+                    {
+                        { "AdapterVariableRefNo", "" }
+                    }
                 },
                 new ScreenItem()
                 {
                     Type = "Input",
                     Text = "Parola",
-                    X = 1, Y = 2, Width = 5, Height = 1,
+                    Properties = new Dictionary<string, object>()
+                    {
+                        { "AdapterVariableRefNo", "" }
+                    }
                 },
                 new ScreenItem()
                 {
                     Type = "Button",
                     Text = "Devam",
-                    X = 1, Y = 3, Width = 5, Height = 1,
+                    Properties = new Dictionary<string, object>()
+                    {
+                        { "AdapterRequestRefNo", "" }
+                    }
                 },
                 new ScreenItem()
                 {
-                    
                 }
             }
         };
     }
 
-    private Screen MakeScreenHome(string loginScreenId, string resetPasswordScreenId, string newMemberScreenId)
+    private Screen MakeScreenHome(string loginScreenRefNo, string resetPasswordScreenRefNo, string newMemberScreenRefNo)
     {
         return new Screen()
         {
@@ -106,39 +114,40 @@ public class SetupHandler : Handler<Setup, SetupReply>
                 new ScreenItem()
                 {
                     Type = "Label",
-                    Text = "Ana Sayfa",
-                    X = 1, Y = 1, Width = 5, Height = 1,
-                    Align = "Center",
+                    Text = "Ana Sayfaya Hosgeldiniz",
                 },
                 new ScreenItem()
                 {
                     Type = "Link",
                     Text = "Giris Yap",
-                    X = 1, Y = 2, Width = 5, Height = 1,
-                    Align = "Center",
-                    OnSuccess = loginScreenId
+                    Properties = new Dictionary<string, object>()
+                    {
+                        { "LinkScreenRefNo", loginScreenRefNo }
+                    }
                 },
                 new ScreenItem()
                 {
                     Type = "Link",
                     Text = "Parola Unuttum",
-                    X = 1, Y = 3, Width = 5, Height = 1,
-                    Align = "Center",
-                    OnSuccess = resetPasswordScreenId
+                    Properties = new Dictionary<string, object>()
+                    {
+                        { "LinkScreenRefNo", resetPasswordScreenRefNo }
+                    }
                 },
                 new ScreenItem()
                 {
                     Type = "Link",
                     Text = "Yeni uyelik",
-                    X = 1, Y = 4, Width = 5, Height = 1,
-                    Align = "Center",
-                    OnSuccess = newMemberScreenId
+                    Properties = new Dictionary<string, object>()
+                    {
+                        { "LinkScreenRefNo", newMemberScreenRefNo }
+                    }
                 }
             }
         };
     }
 
-    public SetupHandler(IDbContextFactory<WorkbenchContext> ctxFactory, EnterpriseBus bus)
+    public SetupHandler(IDbContextFactory<WorkbenchDbContext> ctxFactory, EnterpriseBus bus)
     {
         _ctxFactory = ctxFactory;
         _bus = bus;

@@ -2,9 +2,9 @@
 
 namespace FCWorkbench.Api.Data;
 
-public class WorkbenchContext : DbContext
+public class WorkbenchDbContext : DbContext
 {
-    public WorkbenchContext(DbContextOptions options) : base(options)
+    public WorkbenchDbContext(DbContextOptions options) : base(options)
     {
     }
 

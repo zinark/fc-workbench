@@ -2,7 +2,7 @@
 
 namespace FCHttpRequestEngine.Adapters
 {
-    public class AdapterRequest : HasUniqueId
+    public class AdapterRequest : HasRefNo
     {
         Requester _requester = new Requester();
         TextEngine _textEngine = new TextEngine();

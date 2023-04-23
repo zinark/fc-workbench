@@ -1,6 +1,6 @@
 ﻿namespace FCHttpRequestEngine.Adapters
 {
-    public class AdapterPart : HasUniqueId
+    public class AdapterPart : HasRefNo
     {
         public string Name { get; set; }
         public List<AdapterVariable> Variables { get; set; } = new();

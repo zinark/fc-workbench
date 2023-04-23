@@ -115,7 +115,7 @@ const Workbenchs = () => {
 
 
                         <Link href={"/workbench/" + data.id}>
-                            <div className="text-4xl font-bold"> {data.name} </div>
+                            <div className="text-4xl font-bold"> {data.title} </div>
 
                         </Link>
 

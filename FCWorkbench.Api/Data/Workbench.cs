@@ -1,21 +1,36 @@
 ﻿using FCHttpRequestEngine.Adapters;
 using FCMicroservices.Extensions;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 
 namespace FCWorkbench.Api.Data;
 
-public class Workbench
+public class Workbench : HasRefNo
 {
     public int Id { get; set; }
+    public string Title { get; set; } = "E-Wallet Sample";
     public string AdaptersJson { get; set; } = "[]";
     public string ScreensJson { get; set; } = "[]";
+    public string Description { get; set; } = "A sample workbench for an e-wallet system";
 
-    public Dictionary<string, string> Parameters { get; set; } = new();
+    public Dictionary<string, string> Parameters { get; set; } = new()
+    {
+        { "api", "http://dev.vepara.com.tr" },
+        { "admin_ApiKey", "admin" },
+        { "admin_ApiKey_Password", "1234" },
+        { "user1_Mail", "user1@mail.com" },
+        { "user1_Phone", "5070414877" },
+        { "user1_Password", "1000" },
+        { "user2_Mail", "user2@mail.com" },
+        { "user2_Phone", "5070414888" },
+        { "user2_Password", "2000" },
+        { "user1_walletCode", "W-1" },
+        { "user2_walletCode", "W-2" },
+        { "partner_walletCode", "W-P" }
+    };
 
     public List<Adapter> Adapters() => AdaptersJson?.ParseJson<List<Adapter>>();
     public List<Screen> Screens() => ScreensJson?.ParseJson<List<Screen>>();
 
-    public List<object> Variables()
+    public List<object> AllVariables()
     {
         var list = new List<object>();
 
@@ -31,10 +46,10 @@ public class Workbench
                     list.Add(new
                     {
                         Variable = variable,
-                        PartId = part.Id,
+                        PartRefNo = part.RefNo,
                         PartName = part.Name,
-                        AdapterId = adapter.Id,
-                        AdapterName = adapter.Name
+                        AdapterRefNo = adapter.RefNo,
+                        AdapterName = adapter.Name,
                     });
                 }
             }

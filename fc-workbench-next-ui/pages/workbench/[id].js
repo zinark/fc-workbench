@@ -20,7 +20,7 @@ const Workbench = (props) => {
     const breadcrumbHome = {icon: 'pi pi-home', to: '/'};
     const breadcrumbItems = [
         {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
-        {label: <Link href={"/workbench/" + id}> {bench && bench.name} </Link>},
+        {label: <Link href={"/workbench/" + id}> {bench && bench.title} </Link>},
     ];
 
     const screenMenuItems = [
@@ -88,7 +88,7 @@ const Workbench = (props) => {
         let screen = props.screen
         return <div className="card p-3 m-3 border-1 border-300 col-2">
             <div className="flex justify-content-between align-items-center mb-5">
-                <Link href={"/screen/" + bench.id + "/" + screen.id}>
+                <Link href={"/screen/" + bench.id + "/" + screen.refNo}>
                     <div className="text-2xl font-bold"> {screen.title} </div>
                 </Link>
                 <div>
@@ -121,7 +121,7 @@ const Workbench = (props) => {
 
         return <div className="card p-5 m-5 border-1 border-300 col-5">
             <div className="flex justify-content-between align-items-center mb-5">
-                <Link href={"/adapter/" + bench.id + "/" + adapter.id}>
+                <Link href={"/adapter/" + bench.id + "/" + adapter.refNo}>
                     <div className="text-2xl font-bold"> {adapter.name} </div>
                 </Link>
                 <div>
