@@ -3,7 +3,7 @@ import React, {useRef} from "react";
 
 const CodeEditor = (props) => {
     let obj = props.object
-    if (!obj) obj = "{}"
+    if (!obj) obj = {}
     let code = JSON.stringify(obj, null, 2)
     const editorOptions = {
         "acceptSuggestionOnCommitCharacter": true,

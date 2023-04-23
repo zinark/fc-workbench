@@ -19,6 +19,9 @@ const Screen = () => {
     const [wid, setWid] = useState(0)
     const [sid, setSid] = useState(0)
 
+    const breadcrumbHome = {icon: 'pi pi-home', to: '/'};
+    const [breadcrumbItems, setBreadCrumbItems] = useState([])
+
     useEffect(() => {
         if (!router.query.ids) return
         let ids = router.query.ids
@@ -30,21 +33,22 @@ const Screen = () => {
             setSid(ids[1])
             for (let ix in bench.screens) {
                 let scr = bench.screens[ix];
-                if (scr.refNo !== id1) continue;
+                if (scr.refNo !== id1) continue
                 setScreen(scr)
-                break;
+                break
             }
-
         })
     }, [wid, sid, router, router.query]);
 
+    useEffect(() => {
+        setBreadCrumbItems([
+            {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
+            {label: <Link href={"/workbench/" + wid}> {bench.title} </Link>},
+            {label: <Link href={"/screen/" + wid + "/" + sid}> {screen.title} </Link>}
+        ]);
+    }, [bench, screen, wid, sid])
 
-    const breadcrumbHome = {icon: 'pi pi-home', to: '/'};
-    const breadcrumbItems = [
-        {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
-        {label: <Link href={"/workbench/" + wid}> {bench && bench.title} </Link>},
-        {label: <Link href={"/screen/" + wid + "/" + sid}> {screen && screen.title} </Link>}
-    ];
+
     const screenEditMenuItems = [
         {
             label: 'New',
@@ -78,7 +82,7 @@ const Screen = () => {
         let data = props.screens;
         if (!data) return
         return <div>
-            <Link href={`/screen/${wid}/${data.id}`}>
+            <Link href={`/screen/${wid}/${data.refNo}`}>
                 {data.title}
             </Link>
         </div>
@@ -99,7 +103,7 @@ const Screen = () => {
         let types = ["Label", "Link", "Button", "Input"];
 
         const handleScreenItemTextChange = (item, value) => {
-            console.log (item, value);
+            console.log(item, value);
         };
 
         return <div className="card m-3 p-6 border-1 border-300">
@@ -116,8 +120,8 @@ const Screen = () => {
                 </div>
 
                 <div className="grid col-6">
-                    {types.map(x => {
-                        return <div key={x} className="col-12 md:col-3">
+                    {types.map((x, ix) => {
+                        return <div key={ix} className="col-12 md:col-3">
                             <div className="field-radiobutton">
                                 <RadioButton inputId="option1" name="option" value={x}
                                     // checked={radioValue === 'Chicago'}
@@ -142,7 +146,7 @@ const Screen = () => {
             <Menubar model={screenEditMenuItems}></Menubar>
 
             <div className="card">
-                {screen.items.map(x => <ScreenItem key={x.id} item={x}/>)}
+                {screen.items.map((x, ix) => <ScreenItem key={ix} item={x}/>)}
             </div>
 
         </div>
@@ -176,7 +180,7 @@ const Screen = () => {
 
                 <div className="col-1">
                     <h4>Screens</h4>
-                    {bench.screens.map(x => <LinkForAScreen key={x.id} screens={x}/>)}
+                    {bench.screens.map((scr, ix) => <LinkForAScreen key={ix} screens={scr}/>)}
                 </div>
             </div>
         </div>

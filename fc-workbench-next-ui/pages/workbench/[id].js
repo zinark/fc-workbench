@@ -18,10 +18,7 @@ const Workbench = (props) => {
     const router = useRouter()
     const {id} = router.query
     const breadcrumbHome = {icon: 'pi pi-home', to: '/'};
-    const breadcrumbItems = [
-        {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
-        {label: <Link href={"/workbench/" + id}> {bench && bench.title} </Link>},
-    ];
+    const [breadcrumbItems, setBreadCrumbItems] = useState([])
 
     const screenMenuItems = [
         {
@@ -69,6 +66,12 @@ const Workbench = (props) => {
         })
     }, [id]);
 
+    useEffect(() => {
+        setBreadCrumbItems([
+            {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
+            {label: <Link href={"/workbench/" + id}> {bench.title} </Link>},
+        ]);
+    }, [bench])
 
     const ScreenItem = (props) => {
         let item = props.item
@@ -146,7 +149,7 @@ const Workbench = (props) => {
                 {adapter.requests && adapter.requests.length > 0 &&
                     <div>
                         {adapter.requests.map(x => <Link key={x.id}
-                                                         href={`/adapterRequest/${bench.id}/${adapter.id}/${x.id}`}>
+                                                         href={`/adapterRequest/${bench.id}/${adapter.refNo}/${x.refNo}`}>
                             <div className="m-1">
                                 <Chip className="m-1" icon="pi pi-code"/>
                                 {x.code}
