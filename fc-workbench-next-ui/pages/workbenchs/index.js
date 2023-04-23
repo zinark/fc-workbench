@@ -8,9 +8,9 @@ import {WorkbenchService} from "../../fc-workbench/service/WorkbenchService";
 import Link from 'next/link'
 
 const Workbenchs = () => {
-    const [dataViewValue, setDataViewValue] = useState([]);
-    const [globalFilterValue, setGlobalFilterValue] = useState('');
-    const [filteredValue, setFilteredValue] = useState(null);
+    const [data, setData] = useState([]);
+    const [filter, setFilter] = useState('');
+    const [filtered, setFiltered] = useState(null);
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState(null);
     const [sortOrder, setSortOrder] = useState(null);
@@ -21,26 +21,23 @@ const Workbenchs = () => {
         {label: 'Date Desc', value: 'createdAt'}
     ];
 
-    const refresh_workbenchs = async () => {
-        let data = await WorkbenchService.listWorkbenchs()
-        console.log(data);
-        setDataViewValue(data)
-        setGlobalFilterValue('');
-    }
     useEffect(() => {
-        refresh_workbenchs()
+        WorkbenchService.listWorkbenchs().then(data => {
+            setData(data);
+            setFilter('')
+        });
     }, []);
 
     const onFilter = (e) => {
         const value = e.target.value;
-        setGlobalFilterValue(value);
+        setFilter(value);
         if (value.length === 0) {
-            setFilteredValue(null);
+            setFiltered(null);
         } else {
-            const filtered = dataViewValue.filter((bench) => {
+            const filtered = data.filter((bench) => {
                 return bench.name.toLowerCase().includes(value);
             });
-            setFilteredValue(filtered);
+            setFiltered(filtered);
         }
     };
 
@@ -64,13 +61,13 @@ const Workbenchs = () => {
                       onChange={onSortChange}/>
             <span className="p-input-icon-left">
                 <i className="pi pi-search"/>
-                <InputText value={globalFilterValue} onChange={onFilter} placeholder="Search by Name"/>
+                <InputText value={filter} onChange={onFilter} placeholder="Search by Name"/>
             </span>
             <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)}/>
         </div>
     );
 
-    const dataviewListItem = (data) => {
+    const dataListView = (data) => {
         return (
             <div className="col-12">
                 <div className="flex flex-column md:flex-row align-items-center p-3 w-full">
@@ -100,10 +97,11 @@ const Workbenchs = () => {
         );
     };
 
-    const dataviewGridItem = (data) => {
+    const dataGridView = (data) => {
         return (
             <div className="col-12 lg:col-4">
-                <div className="card m-3 border-1 surface-border">
+                <div className="card m-3 p-6 border-2 surface-border">
+
                     <div className="flex flex-wrap gap-2 align-items-center justify-content-between mb-2">
                         <div className="flex align-items-center">
                             <i className="pi pi-tag mr-2"/>
@@ -115,9 +113,15 @@ const Workbenchs = () => {
                         {/*<img src={`/demo/images/product/${data.image}`} alt={data.name}*/}
                         {/*     className="w-9 shadow-2 my-3 mx-0"/>*/}
 
-                        <div className="text-2xl font-bold"><Link href={"/workbench/" + data.id}>{data.name}</Link>
+
+                        <Link href={"/workbench/" + data.id}>
+                            <div className="text-4xl font-bold"> {data.name} </div>
+
+                        </Link>
+
+                        <div className="mb-3">
+                            {data.description}
                         </div>
-                        <div className="mb-3">{data.description}</div>
                         {/*<Rating value={data.rating} readOnly cancel={false}/>*/}
                         <span className="font-semibold">{data.screens.length} screen(s)</span>
                         <span className="font-semibold">{data.adapters.length} adapter(s)</span>
@@ -143,9 +147,9 @@ const Workbenchs = () => {
         }
 
         if (layout === 'list') {
-            return dataviewListItem(data);
+            return dataListView(data);
         } else if (layout === 'grid') {
-            return dataviewGridItem(data);
+            return dataGridView(data);
         }
     };
 
@@ -155,7 +159,7 @@ const Workbenchs = () => {
                 <div className="col-12">
                     <div className="card">
                         <h5>Workbenchs</h5>
-                        <DataView value={filteredValue || dataViewValue}
+                        <DataView value={filtered || data}
                                   layout={layout}
                                   paginator
                                   rows={9}

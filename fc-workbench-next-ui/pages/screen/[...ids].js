@@ -1,110 +1,47 @@
 import {useRouter} from "next/router";
-import {BreadCrumb} from "primereact/breadcrumb";
-import React, {useEffect, useRef, useState} from "react";
-import {Menubar} from "primereact/menubar";
+import React, {useEffect, useState} from "react";
 import {WorkbenchService} from "../../fc-workbench/service/WorkbenchService";
 import Link from "next/link";
 import {TabPanel, TabView} from "primereact/tabview";
-import Editor from "@monaco-editor/react";
+import CodeEditor from "../../fc-workbench/components/CodeEditor";
+import {BreadCrumb} from "primereact/breadcrumb";
+import {Menubar} from "primereact/menubar";
+
 
 const Screen = () => {
+
+    const router = useRouter()
+
     const [bench, setBench] = useState([]);
     const [screen, setScreen] = useState({})
-    const [editorJson, setEditorJson] = useState("")
-    const router = useRouter()
-    const {ids} = router.query
-    if (!ids) return;
-    let wid = ids[0]
-    let id = ids[1]
-
-    const editorOptions = {
-        "acceptSuggestionOnCommitCharacter": true,
-        "acceptSuggestionOnEnter": "on",
-        "accessibilitySupport": "auto",
-        "autoIndent": false,
-        "automaticLayout": true,
-        "codeLens": true,
-        "colorDecorators": true,
-        "contextmenu": true,
-        "cursorBlinking": "blink",
-        "cursorSmoothCaretAnimation": false,
-        "cursorStyle": "line",
-        "disableLayerHinting": false,
-        "disableMonospaceOptimizations": false,
-        "dragAndDrop": false,
-        "fixedOverflowWidgets": false,
-        "folding": true,
-        "foldingStrategy": "auto",
-        "fontLigatures": false,
-        "formatOnPaste": false,
-        "formatOnType": false,
-        "hideCursorInOverviewRuler": false,
-        "highlightActiveIndentGuide": true,
-        "links": true,
-        "mouseWheelZoom": false,
-        "multiCursorMergeOverlapping": true,
-        "multiCursorModifier": "alt",
-        "overviewRulerBorder": true,
-        "overviewRulerLanes": 2,
-        "quickSuggestions": true,
-        "quickSuggestionsDelay": 100,
-        "readOnly": false,
-        "renderControlCharacters": false,
-        "renderFinalNewline": true,
-        "renderIndentGuides": true,
-        "renderLineHighlight": "all",
-        "renderWhitespace": "none",
-        "revealHorizontalRightPadding": 30,
-        "roundedSelection": true,
-        "rulers": [],
-        "scrollBeyondLastColumn": 5,
-        "scrollBeyondLastLine": true,
-        "selectOnLineNumbers": true,
-        "selectionClipboard": true,
-        "selectionHighlight": true,
-        "showFoldingControls": "mouseover",
-        "smoothScrolling": false,
-        "suggestOnTriggerCharacters": true,
-        "wordBasedSuggestions": true,
-        "wordSeparators": "~!@#$%^&*()-=+[{]}|;:'\",.<>/?",
-        "wordWrap": "off",
-        "wordWrapBreakAfterCharacters": "\t})]?|&,;",
-        "wordWrapBreakBeforeCharacters": "{([+",
-        "wordWrapBreakObtrusiveCharacters": ".",
-        "wordWrapColumn": 80,
-        "wordWrapMinified": true,
-        "wrappingIndent": "none",
-        minimap: {enabled: false},
-    };
-
-    const change_current_screen = (given_id) => {
-        for (let ix in bench.screens) {
-            let screen = bench.screens[ix];
-            if (screen.id !== given_id) continue;
-            setScreen(screen)
-            break;
-        }
-    }
-    const refresh_workbenchs = async (given_id) => {
-        let data = await WorkbenchService.getWorkbench(given_id)
-        await setBench(data)
-    }
+    const [wid, setWid] = useState(0)
+    const [sid, setSid] = useState(0)
 
     useEffect(() => {
-            change_current_screen(id)
-        },
-        [bench, change_current_screen, id]);
+        if (!router.query.ids) return
+        let ids = router.query.ids
+        let id0 = ids[0]
+        let id1 = ids[1]
+        WorkbenchService.getWorkbench(id0).then(data => {
+            setBench(data);
+            setWid(ids[0])
+            setSid(ids[1])
+            for (let ix in bench.screens) {
+                let scr = bench.screens[ix];
+                if (scr.id !== id1) continue;
+                setScreen(scr)
+                break;
+            }
 
-    useEffect(() => {
-        refresh_workbenchs(wid)
-    }, [wid]);
+        })
+    }, [wid, sid, router, router.query]);
 
 
     const breadcrumbHome = {icon: 'pi pi-home', to: '/'};
     const breadcrumbItems = [
         {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
         {label: <Link href={"/workbench/" + wid}> {bench && bench.name} </Link>},
-        {label: <Link href={"/screen/" + wid + "/" + id}> {screen && screen.title} </Link>}
+        {label: <Link href={"/screen/" + wid + "/" + sid}> {screen && screen.title} </Link>}
     ];
     const screenEditMenuItems = [
         {
@@ -172,25 +109,16 @@ const Screen = () => {
         if (!bench.screens) return
         if (!screen) return
 
-        const editorRef = useRef(null);
         return <div className="card">
             <div className="grid">
                 <div className="col-11">
                     <h2>{screen.title}</h2>
-
                     <TabView>
                         <TabPanel header="Screen">
                             <ScreenEditor/>
                         </TabPanel>
                         <TabPanel header="Json">
-                            <Editor
-                                ref={editorRef}
-                                height={"60vh"}
-                                //onChange={e => setEditorJson(e)}
-                                defaultLanguage="json"
-                                value={JSON.stringify(screen, null, 2)}
-                                options={editorOptions}
-                            />
+                            <CodeEditor code={JSON.stringify(screen)}/>
                         </TabPanel>
                     </TabView>
                 </div>
@@ -203,10 +131,10 @@ const Screen = () => {
     }
 
     return <div>
+        <pre>{wid} / {sid}</pre>
         <BreadCrumb home={breadcrumbHome} model={breadcrumbItems}/>
         <Menubar model={screenEditMenuItems}></Menubar>
-
-        {screen && <ScreenPanel/>}
+        <ScreenPanel/>
     </div>
 }
 
