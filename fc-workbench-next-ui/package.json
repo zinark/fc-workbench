@@ -13,6 +13,7 @@
     "codemirror": "6.0.1",
     "@uiw/react-codemirror": "4.19.16",
     "@monaco-editor/react" : "4.5.0",
+    "monaco-editor" : "0.37.1",
     "react-json-editor-ajrm": "2.5.14",
     "linqjs" : "1.0.2",
     "eslint": "8.38.0",
