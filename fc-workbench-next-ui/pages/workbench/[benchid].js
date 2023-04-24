@@ -125,7 +125,7 @@ const Workbench = (props) => {
 
         return <div className="card p-5 m-5 border-1 border-300 col-5">
             <div className="flex justify-content-between align-items-center mb-5">
-                <Link href={"/adapter/" + bench.id + "/" + adapter.refNo}>
+                <Link href={`/workbench/${bench.id}/adapter/${adapter.refNo}`}>
                     <div className="text-2xl font-bold"> {adapter.name} </div>
                 </Link>
                 <div>
@@ -150,7 +150,7 @@ const Workbench = (props) => {
                 {adapter.requests && adapter.requests.length > 0 &&
                     <div>
                         {adapter.requests.map(x => <Link key={x.id}
-                                                         href={`/adapterRequest/${bench.id}/${adapter.refNo}/${x.refNo}`}>
+                                                         href={`/workbench/${bench.id}/adapter/${adapter.refNo}/request/${x.refNo}`}>
                             <div className="m-1">
                                 <Chip className="m-1" icon="pi pi-code"/>
                                 {x.code}
@@ -164,7 +164,8 @@ const Workbench = (props) => {
             <div className="text-sm">
                 {adapter.parts && adapter.parts.length > 0 &&
                     <div>
-                        {adapter.parts.map(x => <Link key={x.id} href={"/"}>
+                        {adapter.parts.map(x => <Link key={x.id}
+                                                      href={`/workbench/${bench.id}/adapter/${adapter.refNo}/part/${x.refNo}`}>
                             <Chip className="m-1" label={x.name} icon="pi pi-align-justify"/>
                         </Link>)}
                     </div>
