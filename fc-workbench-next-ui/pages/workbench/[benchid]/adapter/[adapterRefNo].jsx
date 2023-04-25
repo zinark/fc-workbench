@@ -21,7 +21,7 @@ const Adapter = () => {
     const [requestNodes, setRequestNodes] = useState([])
     const [partNodes, setPartNodes] = useState([])
 
-    const MakeRequestNodes = (reqs, f, itemGroupKey = "code", splitter = '/') => {
+    const MakeRequestNodes = (reqs, f, itemGroupKey = "code", splitter = '/', icon = 'pi-code') => {
         const list = []
         reqs.forEach(item => {
             const code = item[itemGroupKey];
@@ -32,7 +32,7 @@ const Adapter = () => {
                 key: lastSplit,
                 title: lastSplit,
                 label: lastSplit,
-                icon: "pi pi-fw pi-code",
+                icon: "pi pi-fw " + icon,
                 isFolder: false
             }
 
@@ -45,10 +45,10 @@ const Adapter = () => {
                 let folder = list.first(x => x.title === split)
                 if (!folder) {
                     folder = {
-                        key: lastSplit,
+                        key: split,
                         title: split,
                         label: split,
-                        icon: "pi pi-fw pi-align-justify",
+                        icon: "pi pi-fw pi-folder",
                         children: [],
                         isFolder: true
                     }
@@ -89,7 +89,7 @@ const Adapter = () => {
                 children: MakeRequestNodes(x.variables,
                     x => x.adapterKey,
                     "adapterKey",
-                    '_')
+                    '_', 'pi-dollar')
             }))
             setPartNodes(nodes)
         })
@@ -111,7 +111,7 @@ const Adapter = () => {
             <div className="grid col-12">
                 <div className="col-6">
                     <h4>Requests</h4>
-                    <Tree value={requestNodes} className="w-full"/>
+                    <Tree value={requestNodes}  contentClassName="p-0 m-0"/>
                 </div>
                 <div className="col-6">
                     <h4>Parts</h4>
