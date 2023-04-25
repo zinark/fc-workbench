@@ -5,6 +5,7 @@ import Link from "next/link";
 import {WorkbenchService} from "../../../../fc-workbench/service/WorkbenchService";
 import linq from 'linqjs'
 import {BreadCrumb} from "primereact/breadcrumb";
+import {InputText} from "primereact/inputtext";
 
 let l = linq
 const Adapter = () => {
@@ -20,7 +21,8 @@ const Adapter = () => {
     const [breadcrumbItems, setBreadCrumbItems] = useState([])
     const [requestNodes, setRequestNodes] = useState([])
     const [partNodes, setPartNodes] = useState([])
-
+    const [keywordRequest, setKeywordRequest] = useState(null)
+    const [keywordPart, setKeywordPart] = useState(null)
     const MakeRequestNodes = (reqs, f, itemGroupKey = "code", splitter = '/', icon = 'pi-code') => {
         const list = []
         reqs.forEach(item => {
@@ -33,7 +35,8 @@ const Adapter = () => {
                 title: lastSplit,
                 label: lastSplit,
                 icon: "pi pi-fw " + icon,
-                isFolder: false
+                isFolder: false,
+                className: 'm-0 p-0'
             }
 
             if (f) toPush.label = f(item)
@@ -50,7 +53,9 @@ const Adapter = () => {
                         label: split,
                         icon: "pi pi-fw pi-folder",
                         children: [],
-                        isFolder: true
+                        isFolder: true,
+                        expanded: true,
+                        className: 'm-1 p-1'
                     }
                     list.push(folder)
                 }
@@ -77,23 +82,52 @@ const Adapter = () => {
             if (!adapter) return
             setAdapter(adapter)
             setBench(data)
-
-            let nodes = MakeRequestNodes(adapter.requests,
-                x => <Link href={`/workbench/${benchId}/adapter/${adapterRefNo}/request/${x.refNo}`}> {x.code} </Link>)
-            setRequestNodes(nodes)
-
-            nodes = adapter.parts.select(x => ({
-                key: x.name,
-                label: x.name,
-                icon: "pi pi-fw pi-align-justify",
-                children: MakeRequestNodes(x.variables,
-                    x => x.adapterKey,
-                    "adapterKey",
-                    '_', 'pi-dollar')
-            }))
-            setPartNodes(nodes)
         })
     }, [router, router.query])
+
+    useEffect(() => {
+        if (!adapter) return
+        if (!adapter.requests) return
+        if (!adapter.parts) return
+
+        let filteredReqs = adapter.requests
+        if (keywordRequest && keywordRequest.length > 0) {
+            filteredReqs = filteredReqs
+                .where(x => x.code)
+                .where(x => x.code.toLocaleLowerCase().indexOf(keywordRequest.toLocaleLowerCase()) > 0)
+        }
+
+        let filteredParts = adapter.parts
+        // if (keywordPart && keywordPart.length > 0) {
+        //     filteredParts = filteredParts
+        //         .where(x => x.name.indexOf(keywordPart) > 0)
+        // }
+
+
+        let nodes = MakeRequestNodes(filteredReqs,
+            x => <Link href={`/workbench/${benchId}/adapter/${adapterRefNo}/request/${x.refNo}`}> {x.code} </Link>)
+        setRequestNodes(nodes)
+
+        const filterVariables = (variables) => {
+            if (keywordPart && keywordPart.length > 0) {
+                variables = variables.where(x => x.adapterKey.toLocaleLowerCase().indexOf(keywordPart.toLocaleLowerCase()) > 0)
+            }
+            return variables
+        };
+        nodes = filteredParts.select(x => ({
+            key: x.name,
+            label: x.name,
+            expanded: true,
+            className: 'm-0 p-0',
+            icon: "pi pi-fw pi-align-justify",
+            children: MakeRequestNodes(filterVariables(x.variables),
+                x => x.adapterKey,
+
+                "adapterKey",
+                '_', 'pi-dollar')
+        }))
+        setPartNodes(nodes)
+    }, [keywordRequest, keywordPart, bench, adapter])
 
     useEffect(() => {
         setBreadCrumbItems([
@@ -110,11 +144,16 @@ const Adapter = () => {
             <h2>{adapter.name}</h2>
             <div className="grid col-12">
                 <div className="col-6">
+
                     <h4>Requests</h4>
-                    <Tree value={requestNodes}  contentClassName="p-0 m-0"/>
+                    <InputText value={keywordRequest} placeholder="request search"
+                               onChange={e => setKeywordRequest(e.target.value)}/>
+                    <Tree value={requestNodes} className="w-full"/>
                 </div>
                 <div className="col-6">
                     <h4>Parts</h4>
+                    <InputText value={keywordPart} placeholder="part search"
+                               onChange={e => setKeywordPart(e.target.value)}/>
                     <Tree value={partNodes} className="w-full"/>
                 </div>
             </div>
