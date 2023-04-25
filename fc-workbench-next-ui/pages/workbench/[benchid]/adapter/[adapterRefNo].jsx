@@ -85,6 +85,26 @@ const Adapter = () => {
         })
     }, [router, router.query])
 
+    const AdapterVariable = (props) => {
+        let v = props.data
+
+        // TODO : slow impl
+
+        const list = []
+        adapter.requests.map(req => {
+            if (req.content.indexOf(v.adapterKey) > 0) list.push(req);
+        })
+
+        return <div className="p-0 m-0"> {v.adapterKey} <br/>
+
+            {list.map((x, ix) =>
+                <Link key={ix}
+                    href={`/workbench/${benchId}/adapter/${adapterRefNo}/request/${x.refNo}`}>
+                    {x.code}
+                </Link>
+            )}
+        </div>
+    }
     useEffect(() => {
         if (!adapter) return
         if (!adapter.requests) return
@@ -114,6 +134,7 @@ const Adapter = () => {
             }
             return variables
         };
+
         nodes = filteredParts.select(x => ({
             key: x.name,
             label: x.name,
@@ -121,7 +142,7 @@ const Adapter = () => {
             className: 'm-0 p-0',
             icon: "pi pi-fw pi-align-justify",
             children: MakeRequestNodes(filterVariables(x.variables),
-                x => x.adapterKey,
+                x => <AdapterVariable data={x}/>,
 
                 "adapterKey",
                 '_', 'pi-dollar')
