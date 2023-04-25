@@ -11,6 +11,7 @@ import CodeEditor from "../../../../../../fc-workbench/components/CodeEditor";
 
 let q = linq.query;
 
+
 const AdapterRequest = () => {
 
     const router = useRouter()
@@ -57,6 +58,31 @@ const AdapterRequest = () => {
         ]);
     }, [bench])
 
+    const SelectVariable = (props) => {
+        let part = props.part
+
+
+        const children = []
+        part.variables.forEach(v => {
+            children.push({
+                id: v.refNo,
+                label: v.adapterKey
+            })
+        })
+        const tree = [{
+            id: "root",
+            label: part.name,
+            children: children
+        }]
+        // return <Tree value={tree}/>
+        return <div>
+            <h4>{part.name}</h4>
+            {part.variables.map(v => <div>
+                {v.adapterKey}
+            </div>)}
+        </div>
+    }
+
     return <>
         <BreadCrumb home={breadcrumbHome} model={breadcrumbItems}/>
 
@@ -86,30 +112,40 @@ const AdapterRequest = () => {
                     <InputText id="url" type="text" value={adapterRequest.url}/>
                 </div>
             </div>
+            <div className="grid col-12">
+                <div className="col-10">
+                    <TabView>
+                        <TabPanel header="Request">
+                            <pre>{adapterRequest.contentType}</pre>
+                            <CodeEditor object={adapterRequest.content && JSON.parse(adapterRequest.content)}/>
+                        </TabPanel>
+                        <TabPanel header="Headers">
+                            <CodeEditor object={adapterRequest.headers}/>
+                        </TabPanel>
+                        <TabPanel header="Request Mapper">
+                            <CodeEditor object={adapterRequest.requestMapper}/>
+                        </TabPanel>
+                        <TabPanel header="Response Mapper">
+                            <CodeEditor object={adapterRequest.responseMapper}/>
+                        </TabPanel>
+                        <TabPanel header="lastSuccessResponse">
+                            <CodeEditor object={adapterRequest.lastSuccessResponse}/>
+                        </TabPanel>
+                        <TabPanel header="lastFailureResponse">
+                            <CodeEditor object={adapterRequest.lastFailureResponse}/>
+                        </TabPanel>
+                    </TabView>
+                </div>
+                <div className="col-2">
+                    <h3>Variables</h3>
+                    {adapter.parts && adapter.parts.map((x, ix) => <SelectVariable key={ix} part={x}></SelectVariable>)}
+                </div>
+
+            </div>
+
         </div>
 
 
-        <TabView>
-            <TabPanel header="Request">
-                <pre>{adapterRequest.contentType}</pre>
-                <CodeEditor object={adapterRequest.content && JSON.parse(adapterRequest.content)}/>
-            </TabPanel>
-            <TabPanel header="Headers">
-                <CodeEditor object={adapterRequest.headers}/>
-            </TabPanel>
-            <TabPanel header="Request Mapper">
-                <CodeEditor object={adapterRequest.requestMapper}/>
-            </TabPanel>
-            <TabPanel header="Response Mapper">
-                <CodeEditor object={adapterRequest.responseMapper}/>
-            </TabPanel>
-            <TabPanel header="lastSuccessResponse">
-                <CodeEditor object={adapterRequest.lastSuccessResponse}/>
-            </TabPanel>
-            <TabPanel header="lastFailureResponse">
-                <CodeEditor object={adapterRequest.lastFailureResponse}/>
-            </TabPanel>
-        </TabView>
     </>
 }
 

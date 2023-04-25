@@ -21,60 +21,49 @@ const Adapter = () => {
     const [requestNodes, setRequestNodes] = useState([])
     const [partNodes, setPartNodes] = useState([])
 
-    const MakeRequestNodes = (reqs, hash) => {
-        reqs = reqs.select(x => ({
-            key: x.code,
-            value: x
-        }))
+    const MakeRequestNodes = (reqs, f, itemGroupKey = "code", splitter = '/') => {
+        const list = []
+        reqs.forEach(item => {
+            const code = item[itemGroupKey];
+            const codeSplits = code.split(splitter).where(x => x.length > 0)
+            let lastSplit = codeSplits.last()
 
-        let tree = {}
-        for (let key in reqs) {
-            let current_dict = tree
-            let req = reqs[key]
-            if (!req.key) continue
-            let parts = req.key.split('/').where(x => x.length > 0)
+            let toPush = {
+                key: lastSplit,
+                title: lastSplit,
+                label: lastSplit,
+                icon: "pi pi-fw pi-code",
+                isFolder: false
+            }
 
-            parts.forEach(part => {
-                if (!current_dict[part]) {
-                    current_dict[part] = {}
+            if (f) toPush.label = f(item)
+
+            let splits = codeSplits.take(codeSplits.length - 1)
+
+            let target = list
+            splits.forEach(split => {
+                let folder = list.first(x => x.title === split)
+                if (!folder) {
+                    folder = {
+                        key: lastSplit,
+                        title: split,
+                        label: split,
+                        icon: "pi pi-fw pi-align-justify",
+                        children: [],
+                        isFolder: true
+                    }
+                    list.push(folder)
                 }
 
-                current_dict = current_dict[part]
+                target = folder.children
             })
 
-            const last_part = parts[parts.length - 1]
-            if (!current_dict[last_part]) {
-                current_dict[last_part] = []
-            }
+            target.push(toPush)
+        })
 
-            let node = {
-                key: req.value.code,
-                label: <Link href={"/"}> Admin </Link>,
-                icon: "pi pi-fw pi-inbox",
-            }
-            current_dict[last_part].push(req.value.code)
-        }
-        console.table(tree)
-        console.log(tree)
-        console.log(JSON.stringify(tree, 0, null))
-        let result = []
-
-        function buildNodes(tr) {
-            for (let key in tr) {
-                let curr = tr[key]
-
-                if (Array.isArray(curr)) {
-                    curr.forEach(x => buildNodes(x))
-                    return
-                }
-                result.push({
-                    key: key
-                })
-            }
-        }
-
-        buildNodes(tree)
-        console.table(result)
+        return list.where(x => !x.isFolder).concat(
+            list.where(x => x.isFolder).where(x => x.children.length > 0)
+        )
     }
 
     useEffect(() => {
@@ -89,45 +78,19 @@ const Adapter = () => {
             setAdapter(adapter)
             setBench(data)
 
-            // let nodes = MakeRequestNodes(adapter.requests, {})
-            // console.log (nodes)
-            // nodes = [{
-            //     key: "/admin",
-            //     label: <Link href={"/"}> Admin </Link>,
-            //     data: "Admin",
-            //     icon: "pi pi-fw pi-inbox",
-            //     children: [
-            //         {
-            //             key: "/admin/save-identity",
-            //             label: "save-identity",
-            //             data: "Save Identity",
-            //             icon: "pi pi-fw pi-code"
-            //         }
-            //     ]
-            // }];
-
-            let nodes = []
-            adapter.requests.forEach(x => {
-                nodes.push({
-                    key: x.code,
-                    label: <Link
-                        href={`/workbench/${benchId}/adapter/${adapterRefNo}/request/${x.refNo}`}> {x.code} </Link>,
-                    data: "Admin",
-                    icon: "pi pi-fw pi-code",
-                })
-            })
+            let nodes = MakeRequestNodes(adapter.requests,
+                x => <Link href={`/workbench/${benchId}/adapter/${adapterRefNo}/request/${x.refNo}`}> {x.code} </Link>)
             setRequestNodes(nodes)
 
-            nodes = []
-            adapter.parts.forEach(x => {
-                nodes.push({
-                    key: x.name,
-                    label: <Link
-                        href={`/workbench/${benchId}/adapter/${adapterRefNo}/part/${x.refNo}`}> {x.name} </Link>,
-                    data: "Admin",
-                    icon: "pi pi-fw pi-align-justify",
-                })
-            })
+            nodes = adapter.parts.select(x => ({
+                key: x.name,
+                label: x.name,
+                icon: "pi pi-fw pi-align-justify",
+                children: MakeRequestNodes(x.variables,
+                    x => x.adapterKey,
+                    "adapterKey",
+                    '_')
+            }))
             setPartNodes(nodes)
         })
     }, [router, router.query])
