@@ -1,11 +1,32 @@
 import MonacoEditor from "@monaco-editor/react";
 import React, {useRef} from "react";
+import Enumerable from 'linq'
+
+let variables = []
 
 const CodeEditor = (props) => {
     let obj = props.object
+    let bench = props.bench ?? {}
     if (!obj) obj = {}
     let code = JSON.stringify(obj, null, 2)
     const editorRef = useRef(null);
+
+    variables = Enumerable.from(bench.adapters)
+        .selectMany(x => x.parts)
+        .selectMany(x => x.variables)
+        .select(x => ({
+            label: x.adapterKey ?? "undefined",
+            // kind: monaco.languages.CompletionItemKind.Keyword,
+            insertText: x.adapterKey,
+            documentation: {
+                value: "```json \n" + JSON.stringify(x, null, 4) + "\n```",
+                isTrusted: true,
+            },
+            detail: x.adapterKey,
+        }))
+        .toArray();
+    console.log("VARS", variables)
+
 
     function handleEditorChange(value, event) {
     }
@@ -22,7 +43,7 @@ const CodeEditor = (props) => {
                 // eslint-disable-next-line no-bitwise
                 monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_R, // Ctrl + R or Cmd + R
             ],
-            run: ()=>{
+            run: () => {
                 let txt = editor.getModel().getValueInRange(editor.getSelection())
                 alert('selected text:' + txt)
             },
@@ -30,51 +51,57 @@ const CodeEditor = (props) => {
         editor.addAction(myAction)
     }
 
-    function handleEditorWillMount(monaco) {
-        // Öneriler sağlama işlevi
-        function provideCompletionItems(model, position) {
-            return {
-                suggestions: [
-                    {
-                        label: 'admin_searchsessions_text',
-                        kind: monaco.languages.CompletionItemKind.Keyword,
-                        insertText: 'admin_searchsessions_text',
-                        documentation: {
-                            value: 'Bu bir örnek açıklamadır. Bu anahtar kelime örnektir. Kullanımı ile ilgili detaylı bilgi için belgelemeye bakın.',
-                            isTrusted: true,
-                        },
-                        detail: 'admin_searchsessions_text',
-                    },
-                    {
-                        label: 'hello',
-                        kind: monaco.languages.CompletionItemKind.Enum,
-                        icon: {
-                            value: 'flag'
-                        },
-                        insertText: 'hello',
-                        documentation: {
-                            value: `### Hello world
+    const generateSuggestions = () => {
+        return variables
+
+        return [
+            {
+                label: 'admin_searchsessions_text',
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'admin_searchsessions_text',
+                documentation: {
+                    value: 'Bu bir örnek açıklamadır. Bu anahtar kelime örnektir. Kullanımı ile ilgili detaylı bilgi için belgelemeye bakın.',
+                    isTrusted: true,
+                },
+                detail: 'admin_searchsessions_text',
+            },
+            {
+                label: 'hello',
+                kind: monaco.languages.CompletionItemKind.Enum,
+                icon: {
+                    value: 'flag'
+                },
+                insertText: 'hello',
+                documentation: {
+                    value: `### Hello world
 1. deneme
 2. deneme
 3. test
 4. *bold* text
 5. usages
                             `,
-                            isTrusted: true
-                        }
-                    },
-                    {
-                        label: 'world',
-                        kind: monaco.languages.CompletionItemKind.Keyword,
-                        insertText: 'world',
-                        documentation: 'Bu anahtar kelime örnektir. Kullanımı ile ilgili detaylı bilgi için belgelemeye bakın.',
-                        // icon: {
-                        //     value: 'fas fa-flag'
-                        // }
-                        // detail: monaco.MarkerdownString(`Bu bir örnek ayrıntıdır. <span style='font-size: 20px'>Büyük boyut</span>`),
-                        // detail: new monaco.MarkdownString(`**Bu bir örnek ayrıntıdır.**\n\nBüyük Boyut: <span style="font-size: 20px">myKeyword</span>`),
-                    },
-                ],
+                    isTrusted: true
+                }
+            },
+            {
+                label: 'world',
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'world',
+                documentation: 'Bu anahtar kelime örnektir. Kullanımı ile ilgili detaylı bilgi için belgelemeye bakın.',
+                // icon: {
+                //     value: 'fas fa-flag'
+                // }
+                // detail: monaco.MarkerdownString(`Bu bir örnek ayrıntıdır. <span style='font-size: 20px'>Büyük boyut</span>`),
+                // detail: new monaco.MarkdownString(`**Bu bir örnek ayrıntıdır.**\n\nBüyük Boyut: <span style="font-size: 20px">myKeyword</span>`),
+            },
+        ]
+    };
+
+    function handleEditorWillMount(monaco) {
+        // Öneriler sağlama işlevi
+        function provideCompletionItems(model, position) {
+            return {
+                suggestions: generateSuggestions(monaco),
             };
         }
 

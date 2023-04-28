@@ -1,3 +1,5 @@
+import Enumerable from "linq";
+
 export const Utils = {
     Guid() {
         function uuidv4() {
@@ -8,12 +10,12 @@ export const Utils = {
 
         return uuidv4().replaceAll("-", "").toLocaleUpperCase();
     },
-    MakeRequestNodes (reqs, f, itemGroupKey = "code", splitter = '/', icon = 'pi-code') {
+    MakeRequestNodes(reqs, f, itemGroupKey = "code", splitter = '/', icon = 'pi-code') {
         const list = []
         reqs.forEach(item => {
             const code = item[itemGroupKey];
-            const codeSplits = code.split(splitter).where(x => x.length > 0)
-            let lastSplit = codeSplits.last()
+            const codeSplits = Enumerable.from(code.split(splitter)).where(x => x.length > 0).toArray()
+            let lastSplit = codeSplits.reverse()[0]
 
             let toPush = {
                 key: lastSplit,
@@ -26,11 +28,11 @@ export const Utils = {
 
             if (f) toPush.label = f(item)
 
-            let splits = codeSplits.take(codeSplits.length - 1)
+            let splits = Enumerable.from(codeSplits).take(codeSplits.length - 1).toArray()
 
             let target = list
             splits.forEach(split => {
-                let folder = list.first(x => x.title === split)
+                let folder = Enumerable.from(list).firstOrDefault(x => x.title === split)
                 if (!folder) {
                     folder = {
                         key: split,
@@ -51,9 +53,10 @@ export const Utils = {
             target.push(toPush)
         })
 
-        return list.where(x => !x.isFolder).concat(
-            list.where(x => x.isFolder).where(x => x.children.length > 0)
-        )
+        return Enumerable.from(list).where(x => !x.isFolder)
+            .concat(
+                Enumerable.from(list).where(x => x.isFolder).where(x => x.children.length > 0).toArray()
+            ).toArray()
     }
 
 }

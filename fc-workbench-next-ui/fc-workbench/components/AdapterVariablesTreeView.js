@@ -2,9 +2,8 @@ import {InputText} from "primereact/inputtext";
 import {Tree} from "primereact/tree";
 import React, {useState} from "react";
 import {Utils} from "../service/Utils";
-import linq from 'linqjs'
+import Enumerable from 'linq'
 
-let l = linq
 const AdapterVariablesTreeView = (props) => {
     let adapter = props.adapter
     let parts = adapter.parts ?? []
@@ -13,7 +12,7 @@ const AdapterVariablesTreeView = (props) => {
 
     const filterVariables = (variables) => {
         if (keywordPart && keywordPart.length > 0) {
-            variables = variables.where(x => x.adapterKey.toLocaleLowerCase().indexOf(keywordPart.toLocaleLowerCase()) >= 0)
+            variables = Enumerable.from(variables).where(x => x.adapterKey.toLocaleLowerCase().indexOf(keywordPart.toLocaleLowerCase()) >= 0)
         }
         return variables
     };
@@ -29,16 +28,16 @@ const AdapterVariablesTreeView = (props) => {
         // })
         return <div className="p-0 m-0"> {variable.adapterKey} <br/>
 
-                {/*{list.map((x, ix) =>*/}
-                {/*    <Link key={ix}*/}
-                {/*          href={`/workbench/${1}/adapter/${adapter.refNo}/request/${x.refNo}`}>*/}
-                {/*        {x.code}*/}
-                {/*    </Link>*/}
-                {/*)}*/}
+            {/*{list.map((x, ix) =>*/}
+            {/*    <Link key={ix}*/}
+            {/*          href={`/workbench/${1}/adapter/${adapter.refNo}/request/${x.refNo}`}>*/}
+            {/*        {x.code}*/}
+            {/*    </Link>*/}
+            {/*)}*/}
         </div>
     }
 
-    const nodes = parts.select(part => ({
+    const nodes = Enumerable.from(parts).select(part => ({
         key: part.name,
         label: part.name,
         expanded: true,
@@ -50,7 +49,7 @@ const AdapterVariablesTreeView = (props) => {
             "adapterKey",
             '_',
             'pi-dollar')
-    }))
+    })).toArray()
 
     console.log(nodes)
     return <>

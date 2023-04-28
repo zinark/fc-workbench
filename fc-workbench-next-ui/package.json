@@ -15,7 +15,7 @@
     "@monaco-editor/react" : "4.5.0",
     "monaco-editor" : "0.37.1",
     "react-json-editor-ajrm": "2.5.14",
-    "linqjs" : "1.0.2",
+    "linq" : "4.0.1",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "next": "13.2.3",

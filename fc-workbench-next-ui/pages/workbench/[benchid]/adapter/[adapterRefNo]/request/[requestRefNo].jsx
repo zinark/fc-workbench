@@ -1,6 +1,6 @@
 import {useRouter} from "next/router";
 import React, {useEffect, useState} from "react";
-import linq from "linqjs";
+import Enumerable from "linq";
 
 import {TabPanel, TabView} from "primereact/tabview";
 import Link from "next/link";
@@ -9,8 +9,6 @@ import {InputText} from "primereact/inputtext";
 import {WorkbenchService} from "../../../../../../fc-workbench/service/WorkbenchService";
 import CodeEditor from "../../../../../../fc-workbench/components/CodeEditor";
 import AdapterVariablesTreeView from "../../../../../../fc-workbench/components/AdapterVariablesTreeView";
-
-let q = linq.query;
 
 
 const AdapterRequest = () => {
@@ -33,12 +31,12 @@ const AdapterRequest = () => {
             setBenchId(benchId)
             setAdapterRefNo(adapterRefNo)
             setAdapterRequestRefNo(requestRefNo)
-            let adapter = data.adapters.where(x => x.refNo === adapterRefNo).first()
+            let adapter = Enumerable.from(data.adapters).where(x => x.refNo === adapterRefNo).firstOrDefault()
             if (!adapter) {
                 console.error(adapterRefNo)
                 return;
             }
-            let adapterRequest = adapter.requests.where(x => x.refNo === requestRefNo).first()
+            let adapterRequest = Enumerable.from(adapter.requests).where(x => x.refNo === requestRefNo).firstOrDefault()
             setAdapter(adapter)
             setAdapterRequest(adapterRequest)
             setBench(data)
@@ -118,7 +116,8 @@ const AdapterRequest = () => {
                     <TabView>
                         <TabPanel header="Request">
                             <pre>{adapterRequest.contentType}</pre>
-                            <CodeEditor object={adapterRequest.content && JSON.parse(adapterRequest.content)}/>
+                            <CodeEditor object={adapterRequest.content && JSON.parse(adapterRequest.content)}
+                                        bench={bench}/>
                         </TabPanel>
                         <TabPanel header="Headers">
                             <CodeEditor object={adapterRequest.headers}/>
