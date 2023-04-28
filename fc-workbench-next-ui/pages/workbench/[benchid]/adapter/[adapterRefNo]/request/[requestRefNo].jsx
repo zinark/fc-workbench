@@ -8,6 +8,7 @@ import {BreadCrumb} from "primereact/breadcrumb";
 import {InputText} from "primereact/inputtext";
 import {WorkbenchService} from "../../../../../../fc-workbench/service/WorkbenchService";
 import CodeEditor from "../../../../../../fc-workbench/components/CodeEditor";
+import AdapterVariablesTreeView from "../../../../../../fc-workbench/components/AdapterVariablesTreeView";
 
 let q = linq.query;
 
@@ -113,7 +114,7 @@ const AdapterRequest = () => {
                 </div>
             </div>
             <div className="grid col-12">
-                <div className="col-10">
+                <div className="col-9">
                     <TabView>
                         <TabPanel header="Request">
                             <pre>{adapterRequest.contentType}</pre>
@@ -136,9 +137,8 @@ const AdapterRequest = () => {
                         </TabPanel>
                     </TabView>
                 </div>
-                <div className="col-2">
-                    <h3>Variables</h3>
-                    {adapter.parts && adapter.parts.map((x, ix) => <SelectVariable key={ix} part={x}></SelectVariable>)}
+                <div className="col-3">
+                    <AdapterVariablesTreeView adapter={adapter}/>
                 </div>
 
             </div>
