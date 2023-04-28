@@ -25,7 +25,6 @@ const CodeEditor = (props) => {
             detail: x.adapterKey,
         }))
         .toArray();
-    console.log("VARS", variables)
 
 
     function handleEditorChange(value, event) {
@@ -51,57 +50,11 @@ const CodeEditor = (props) => {
         editor.addAction(myAction)
     }
 
-    const generateSuggestions = () => {
-        return variables
-
-        return [
-            {
-                label: 'admin_searchsessions_text',
-                kind: monaco.languages.CompletionItemKind.Keyword,
-                insertText: 'admin_searchsessions_text',
-                documentation: {
-                    value: 'Bu bir örnek açıklamadır. Bu anahtar kelime örnektir. Kullanımı ile ilgili detaylı bilgi için belgelemeye bakın.',
-                    isTrusted: true,
-                },
-                detail: 'admin_searchsessions_text',
-            },
-            {
-                label: 'hello',
-                kind: monaco.languages.CompletionItemKind.Enum,
-                icon: {
-                    value: 'flag'
-                },
-                insertText: 'hello',
-                documentation: {
-                    value: `### Hello world
-1. deneme
-2. deneme
-3. test
-4. *bold* text
-5. usages
-                            `,
-                    isTrusted: true
-                }
-            },
-            {
-                label: 'world',
-                kind: monaco.languages.CompletionItemKind.Keyword,
-                insertText: 'world',
-                documentation: 'Bu anahtar kelime örnektir. Kullanımı ile ilgili detaylı bilgi için belgelemeye bakın.',
-                // icon: {
-                //     value: 'fas fa-flag'
-                // }
-                // detail: monaco.MarkerdownString(`Bu bir örnek ayrıntıdır. <span style='font-size: 20px'>Büyük boyut</span>`),
-                // detail: new monaco.MarkdownString(`**Bu bir örnek ayrıntıdır.**\n\nBüyük Boyut: <span style="font-size: 20px">myKeyword</span>`),
-            },
-        ]
-    };
-
     function handleEditorWillMount(monaco) {
         // Öneriler sağlama işlevi
         function provideCompletionItems(model, position) {
             return {
-                suggestions: generateSuggestions(monaco),
+                suggestions: variables
             };
         }
 

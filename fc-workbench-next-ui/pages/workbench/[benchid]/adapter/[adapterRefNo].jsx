@@ -3,13 +3,12 @@ import {Tree} from "primereact/tree";
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import {WorkbenchService} from "../../../../fc-workbench/service/WorkbenchService";
-import linq from 'linqjs'
+import Enumerable from 'linq'
 import {BreadCrumb} from "primereact/breadcrumb";
 import {InputText} from "primereact/inputtext";
 import {Utils} from "../../../../fc-workbench/service/Utils";
 import AdapterVariablesTreeView from "../../../../fc-workbench/components/AdapterVariablesTreeView";
 
-let l = linq
 const Adapter = () => {
     const router = useRouter()
 
@@ -31,7 +30,7 @@ const Adapter = () => {
         WorkbenchService.getWorkbench(benchId).then(data => {
             setBenchId(benchId)
             setAdapterRefNo(adapterRefNo)
-            let adapter = data.adapters.where(x => x.refNo === adapterRefNo).first()
+            let adapter = Enumerable.from(data.adapters).where(x => x.refNo === adapterRefNo).firstOrDefault()
             if (!adapter) return
             setAdapter(adapter)
             setBench(data)
@@ -46,7 +45,7 @@ const Adapter = () => {
 
         let filteredReqs = adapter.requests
         if (keywordRequest && keywordRequest.length > 0) {
-            filteredReqs = filteredReqs
+            filteredReqs = Enumerable.from(filteredReqs)
                 .where(x => x.code)
                 .where(x => x.code.toLocaleLowerCase().indexOf(keywordRequest.toLocaleLowerCase()) > 0)
         }

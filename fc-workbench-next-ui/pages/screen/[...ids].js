@@ -7,11 +7,11 @@ import CodeEditor from "../../fc-workbench/components/CodeEditor";
 import {BreadCrumb} from "primereact/breadcrumb";
 import {Menubar} from "primereact/menubar";
 import ScreenItem from "../../fc-workbench/components/ScreenItem";
-import linq from 'linqjs'
+import Enumerable from 'linq'
 import {Utils} from "../../fc-workbench/service/Utils";
 import ScreenMobileView from "../../fc-workbench/components/ScreenMobileView";
 
-let l = linq
+
 
 const Screen = () => {
 
@@ -95,7 +95,7 @@ const Screen = () => {
     }
 
     const handleDeleteScreenItem = (refNo) => {
-        const newItems = screen.items.where(x => x.refNo !== refNo)
+        const newItems = Enumerable.from(screen.items).where(x => x.refNo !== refNo).toArray()
         const newScreen = {...screen}
         newScreen.items = newItems
         setScreen(newScreen)
