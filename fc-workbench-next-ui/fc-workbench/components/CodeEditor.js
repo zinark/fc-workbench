@@ -16,7 +16,7 @@ const CodeEditor = (props) => {
         .selectMany(x => x.variables)
         .select(x => ({
             label: x.adapterKey ?? "undefined",
-            // kind: monaco.languages.CompletionItemKind.Keyword,
+            kind: 14, // monaco.languages.CompletionItemKind.Keyword,
             insertText: x.adapterKey,
             documentation: {
                 value: "```json \n" + JSON.stringify(x, null, 4) + "\n```",
@@ -60,7 +60,7 @@ const CodeEditor = (props) => {
 
         // Öneri sağlama işlevini kaydetme
         if (window.monacoSuggestionsLoaded) return
-        monaco.languages.registerCompletionItemProvider('json', {
+        monaco.languages.registerCompletionItemProvider('*', {
             provideCompletionItems,
         });
         window.monacoSuggestionsLoaded = true

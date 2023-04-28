@@ -15,7 +15,7 @@ export const Utils = {
         reqs.forEach(item => {
             const code = item[itemGroupKey];
             const codeSplits = Enumerable.from(code.split(splitter)).where(x => x.length > 0).toArray()
-            let lastSplit = codeSplits.reverse()[0]
+            let lastSplit = codeSplits[0]
 
             let toPush = {
                 key: lastSplit,

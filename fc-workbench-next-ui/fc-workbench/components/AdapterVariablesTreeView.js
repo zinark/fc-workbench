@@ -51,14 +51,22 @@ const AdapterVariablesTreeView = (props) => {
             'pi-dollar')
     })).toArray()
 
-    console.log(nodes)
+    let onDoubleClick = (x) =>{}
+    let onClick = (x) =>{}
+    if (props.onDoubleClick) onDoubleClick = props.onDoubleClick;
+    if (props.onClick) onClick= props.onClick;
+
     return <>
         <h4>Parts</h4>
         <InputText value={keywordPart}
                    placeholder="part search"
                    onChange={e => setKeywordPart(e.target.value)}/>
 
-        <Tree value={nodes} className="w-full"/>
+        <Tree value={nodes}
+              className="w-full"
+              onNodeDoubleClick={onDoubleClick}
+              onNodeClick={onClick}
+        />
     </>
 }
 

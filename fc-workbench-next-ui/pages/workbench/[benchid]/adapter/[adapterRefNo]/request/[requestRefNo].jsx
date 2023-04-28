@@ -82,6 +82,9 @@ const AdapterRequest = () => {
         </div>
     }
 
+    const onTreeClick = (node) => {
+        if (!node.isFolder) alert(node.title)
+    };
     return <>
         <BreadCrumb home={breadcrumbHome} model={breadcrumbItems}/>
 
