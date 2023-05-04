@@ -74,7 +74,7 @@ const AdapterVariablesTreeView = (props) => {
     const nodes = Enumerable.from(parts).select(part => ({
         key: part.name,
         label: part.name,
-        expanded: true,
+        //expanded: true,
         className: 'm-0 p-0',
         icon: "pi pi-fw pi-align-justify",
 
