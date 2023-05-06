@@ -51,10 +51,10 @@ const AdapterPart = () => {
             <h2>{part.name}</h2>
             {/*<pre>{JSON.stringify(part, null, 4)}</pre>*/}
             <div className="grid col-12">
-                <div className="col-6">
+                <div className="col-4">
                     <AdapterVariablesTreeView adapter={adapter}/>
                 </div>
-                <div className="col-6">
+                <div className="col-8">
 
                 </div>
             </div>

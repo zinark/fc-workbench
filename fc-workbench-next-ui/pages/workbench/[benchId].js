@@ -11,13 +11,17 @@ import {Menu} from "primereact/menu";
 import CodeEditor from "../../fc-workbench/components/CodeEditor";
 import ScreenMobileView from "../../fc-workbench/components/ScreenMobileView";
 
-const Workbench = (props) => {
-    const [bench, setBench] = useState([]);
+const Workbench = () => {
+    const router = useRouter()
+    const [benchId, setBenchId] = useState(0)
+    const [bench, setBench] = useState({
+        title : 'undefined',
+        screens : [],
+        adapters : []
+    });
+
     const [screenCount, setScreenCount] = useState(0)
     const [adapterCount, setAdapterCount] = useState(0)
-
-    const router = useRouter()
-    const {id} = router.query
     const breadcrumbHome = {icon: 'pi pi-home', to: '/'};
     const [breadcrumbItems, setBreadCrumbItems] = useState([])
 
@@ -58,19 +62,30 @@ const Workbench = (props) => {
         }
     ];
 
+    const menuScreen = useRef(null);
 
     useEffect(() => {
-        WorkbenchService.getWorkbench(id).then(data => {
-            setBench(data)
-            setScreenCount(data.screens.length)
-            setAdapterCount(data.adapters.length)
+        if (!router.query) return
+        let {benchId} = router.query
+        if (benchId === 0) return
+        WorkbenchService.getWorkbench(benchId).then(data => {
+            setBenchId(benchId)
+            if (data) {
+                setBench(data)
+                if (data.screens) setScreenCount(data.screens.length)
+                if (data.adapters) setAdapterCount(data.adapters.length)
+            }
+
+
         })
-    }, [id]);
+
+    }, [router, router.query]);
+
 
     useEffect(() => {
         setBreadCrumbItems([
             {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
-            {label: <Link href={"/workbench/" + id}> {bench.title} </Link>},
+            {label: <Link href={"/workbench/" + benchId}> {bench.title} </Link>},
         ]);
     }, [bench])
 
@@ -87,7 +102,6 @@ const Workbench = (props) => {
 
 
     }
-    const menuScreen = useRef(null);
     const ScreenGridView = (props) => {
         let screen = props.screen
         return <div className="card p-3 m-3 border-1 border-300 col-2">
@@ -205,9 +219,12 @@ const Workbench = (props) => {
             {bench.adapters.map(x => <AdapterGridView key={x.id} adapter={x}/>)}
         </div>
     }
+
+    if (!bench) return <div> loading </div>
     return (
         <>
             <BreadCrumb home={breadcrumbHome} model={breadcrumbItems}/>
+
             <div className="card">
                 <h2>{bench && bench.name}</h2>
                 <TabView>

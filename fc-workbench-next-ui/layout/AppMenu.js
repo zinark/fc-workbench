@@ -1,12 +1,12 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AppMenuitem from './AppMenuitem';
 import {LayoutContext} from './context/layoutcontext';
 import {MenuProvider} from './context/menucontext';
 
 const AppMenu = () => {
     const {layoutConfig} = useContext(LayoutContext);
-
-    const model = [
+    const [menu, setMenu] = useState([])
+    const sidebarMenu = [
         {
             label: 'Design',
             items: [
@@ -34,13 +34,16 @@ const AppMenu = () => {
                 }
             ]
         },
-
     ];
+
+    useEffect(()=>{
+        setMenu(sidebarMenu)
+    }, [])
 
     return (
         <MenuProvider>
             <ul className="layout-menu">
-                {model.map((item, i) => {
+                {sidebarMenu.map((item, i) => {
                     return !item.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label}/> :
                         <li className="menu-separator"></li>;
                 })}

@@ -28,6 +28,8 @@ const Adapter = () => {
         let {benchId, adapterRefNo} = router.query
 
         WorkbenchService.getWorkbench(benchId).then(data => {
+            if (!data) return;
+            console.log (data)
             setBenchId(benchId)
             setAdapterRefNo(adapterRefNo)
             let adapter = Enumerable.from(data.adapters).where(x => x.refNo === adapterRefNo).firstOrDefault()
