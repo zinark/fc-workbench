@@ -36,4 +36,16 @@ public class WorkbenchController : Controller
     {
         return _bus.Handle(input) as GetWorkbenchReply;
     }
+
+    [HttpPost("save-workbench")]
+    public SaveWorkbenchReply SaveWorkbench(SaveWorkbench input)
+    {
+        return _bus.Handle(input) as SaveWorkbenchReply;
+    }
+
+    [HttpPost("search-workbenchs")]
+    public SearchWorkbenchsReply SearchWorkbenchs(SearchWorkbenchs input)
+    {
+        return _bus.Handle(input) as SearchWorkbenchsReply;
+    }
 }

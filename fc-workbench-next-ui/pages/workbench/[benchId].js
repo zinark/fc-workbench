@@ -15,9 +15,9 @@ const Workbench = () => {
     const router = useRouter()
     const [benchId, setBenchId] = useState(0)
     const [bench, setBench] = useState({
-        title : 'undefined',
-        screens : [],
-        adapters : []
+        title: 'undefined',
+        screens: [],
+        adapters: []
     });
 
     const [screenCount, setScreenCount] = useState(0)
@@ -228,19 +228,18 @@ const Workbench = () => {
             <div className="card">
                 <h2>{bench && bench.name}</h2>
                 <TabView>
-                    <TabPanel header={"Screens (" + screenCount + ")"}>
-                        <Menubar model={screenMenuItems}></Menubar>
-                        <div className="card">
-                            <ScreenGrid></ScreenGrid>
-                        </div>
-                    </TabPanel>
                     <TabPanel header={"Adapters (" + adapterCount + ")"}>
                         <Menubar model={adapterMenuItems}></Menubar>
                         <div className="card">
                             <AdapterGrid></AdapterGrid>
                         </div>
                     </TabPanel>
-
+                    <TabPanel header={"Screens (" + screenCount + ")"}>
+                        <Menubar model={screenMenuItems}></Menubar>
+                        <div className="card">
+                            <ScreenGrid></ScreenGrid>
+                        </div>
+                    </TabPanel>
                     <TabPanel header="Parameters">
                         <CodeEditor object={bench.parameters}/>
                     </TabPanel>

@@ -6,6 +6,7 @@ import {Rating} from 'primereact/rating';
 import {InputText} from 'primereact/inputtext';
 import {WorkbenchService} from "../../fc-workbench/service/WorkbenchService";
 import Link from 'next/link'
+import {Menubar} from "primereact/menubar";
 
 const Workbenchs = () => {
     const [data, setData] = useState([]);
@@ -15,7 +16,24 @@ const Workbenchs = () => {
     const [sortKey, setSortKey] = useState(null);
     const [sortOrder, setSortOrder] = useState(null);
     const [sortField, setSortField] = useState(null);
+    const benchMenuItems = [
+        {
+            label: 'New',
+            icon: 'pi pi-fw pi-plus',
+            command : () => onNewWorkbench()
+        },
+        {
+            label: 'Save',
+            icon: 'pi pi-fw pi-save'
+        }
+    ];
 
+    const onNewWorkbench = () => {
+        WorkbenchService.saveWorkbench(0).then(data => {
+            // setData(data.items);
+            setFilter('')
+        });
+    }
     const sortOptions = [
         {label: 'Date', value: '!createdAt'},
         {label: 'Date Desc', value: 'createdAt'}
@@ -23,7 +41,7 @@ const Workbenchs = () => {
 
     useEffect(() => {
         WorkbenchService.listWorkbenchs().then(data => {
-            setData(data);
+            setData(data.items);
             setFilter('')
         });
     }, []);
@@ -123,8 +141,8 @@ const Workbenchs = () => {
                             {data.description}
                         </div>
                         {/*<Rating value={data.rating} readOnly cancel={false}/>*/}
-                        <span className="font-semibold">{data.screens.length} screen(s)</span>
-                        <span className="font-semibold">{data.adapters.length} adapter(s)</span>
+                        <span className="font-semibold">{data.screenCount} screen(s)</span>
+                        <span className="font-semibold">{data.adapterCount} adapter(s)</span>
 
                     </div>
                     <div className="flex align-items-center justify-content-center">
@@ -159,6 +177,8 @@ const Workbenchs = () => {
                 <div className="col-12">
                     <div className="card">
                         <h5>Workbenchs</h5>
+                        <Menubar model={benchMenuItems}></Menubar>
+
                         <DataView value={filtered || data}
                                   layout={layout}
                                   paginator
