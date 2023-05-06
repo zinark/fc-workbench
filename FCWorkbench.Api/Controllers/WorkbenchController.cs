@@ -37,6 +37,12 @@ public class WorkbenchController : Controller
         return _bus.Handle(input) as GetWorkbenchReply;
     }
 
+    [HttpPost("delete-workbench")]
+    public DeleteWorkbenchReply DeleteWorkbench(DeleteWorkbench input)
+    {
+        return _bus.Handle(input) as DeleteWorkbenchReply;
+    }
+
     [HttpPost("save-workbench")]
     public SaveWorkbenchReply SaveWorkbench(SaveWorkbench input)
     {

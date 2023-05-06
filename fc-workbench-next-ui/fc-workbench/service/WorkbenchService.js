@@ -50,15 +50,15 @@ export const WorkbenchService = {
                 .then((res) => res.json())
                 .then((d) => d);
         },
-        saveWorkbench(id) {
+        createWorkbench(id, title = 'new') {
 
             const body = {
                 id: id,
-                title : 'new',
-                description : 'desc',
-                parameters : {},
-                adapters : JSON.stringify([]),
-                screens : JSON.stringify([])
+                title: title,
+                description: '',
+                parameters: {},
+                adapters: JSON.stringify([]),
+                screens: JSON.stringify([])
             }
             return fetch(`${baseUrl()}/save-workbench`, {
                 method: 'POST',
@@ -71,7 +71,48 @@ export const WorkbenchService = {
             })
                 .then((res) => res.json())
                 .then((d) => d);
-        }
+        },
+        changeWorkbench(id, title, description, parameters, adapters, screens) {
+            if (!id) throw new Error('id yollayin!');
+
+            const body = {
+                id: id,
+                title: title,
+                description: description,
+                parameters: parameters,
+                adapters: JSON.stringify(adapters),
+                screens: JSON.stringify(screens)
+            }
+            return fetch(`${baseUrl()}/save-workbench`, {
+                method: 'POST',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Content-Type': 'application/json',
+                    'accept': 'text/plain'
+                },
+                body: JSON.stringify(body)
+            })
+                .then((res) => res.json())
+                .then((d) => d);
+        },
+        deleteWorkbench(id) {
+
+            const body = {
+                id: id
+            }
+            return fetch(`${baseUrl()}/delete-workbench`, {
+                method: 'POST',
+                headers: {
+                    'Cache-Control': 'no-cache',
+                    'Content-Type': 'application/json',
+                    'accept': 'text/plain'
+                },
+                body: JSON.stringify(body)
+            })
+                .then((res) => res.json())
+                .then((d) => d);
+        },
+
 
     }
 ;

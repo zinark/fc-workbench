@@ -7,6 +7,7 @@ import {InputText} from 'primereact/inputtext';
 import {WorkbenchService} from "../../fc-workbench/service/WorkbenchService";
 import Link from 'next/link'
 import {Menubar} from "primereact/menubar";
+import {Dialog} from "primereact/dialog";
 
 const Workbenchs = () => {
     const [data, setData] = useState([]);
@@ -16,11 +17,14 @@ const Workbenchs = () => {
     const [sortKey, setSortKey] = useState(null);
     const [sortOrder, setSortOrder] = useState(null);
     const [sortField, setSortField] = useState(null);
+    const [showDelete, setShowDelete] = useState(false);
+    const [benchIdToDelete, setBenchIdToDelete] = useState(null)
+
     const benchMenuItems = [
         {
             label: 'New',
             icon: 'pi pi-fw pi-plus',
-            command : () => onNewWorkbench()
+            command: () => onNewWorkbench()
         },
         {
             label: 'Save',
@@ -29,7 +33,7 @@ const Workbenchs = () => {
     ];
 
     const onNewWorkbench = () => {
-        WorkbenchService.saveWorkbench(0).then(data => {
+        WorkbenchService.createWorkbench(0).then(data => {
             // setData(data.items);
             setFilter('')
         });
@@ -114,6 +118,18 @@ const Workbenchs = () => {
             </div>
         );
     };
+    const onDeleteBench = () => {
+        WorkbenchService.deleteWorkbench(benchIdToDelete).then(data => {
+            setFilter('')
+        });
+        setShowDelete(false);
+    };
+    const deletePopup = () => {
+        return <>
+            <Button type="button" label="No" icon="pi pi-times" onClick={() => setShowDelete(false)} text/>
+            <Button type="button" label="Yes" icon="pi pi-check" onClick={() => onDeleteBench()} text autoFocus/>
+        </>
+    }
 
     const dataGridView = (data) => {
         return (
@@ -151,8 +167,28 @@ const Workbenchs = () => {
                         {/*</Link>*/}
 
                         <Link href={"/run/" + data.id}>
-                            <Button icon="pi pi-arrow-circle-right" severity="success" tooltip={"Run"} rounded/>
+                            <Button rounded text icon="pi pi-arrow-circle-right" severity="success" tooltip={"Run"}/>
                         </Link>
+
+                        <Button text rounded label="Delete" icon="pi pi-trash" severity="warning"
+                                onClick={() => {
+                                    setBenchIdToDelete(data.id)
+                                    setShowDelete(true);
+                                }}/>
+
+                        <Dialog header="Confirmation"
+                                visible={showDelete}
+                                onHide={() => setShowDelete(false)}
+                                style={{width: '350px'}} modal
+                                footer={deletePopup}>
+
+                            <div className="flex align-items-center justify-content-center">
+                                <i className="pi pi-exclamation-triangle mr-3" style={{fontSize: '2rem'}}/>
+                                <span>Are you sure you want to proceed? {benchIdToDelete}</span>
+                            </div>
+
+                        </Dialog>
+
                     </div>
                 </div>
             </div>
@@ -186,7 +222,7 @@ const Workbenchs = () => {
                                   sortOrder={sortOrder}
                                   sortField={sortField}
                                   itemTemplate={itemTemplate}
-                                  header={dataViewHeader}></DataView>
+                                  header={dataViewHeader}/>
                     </div>
                 </div>
             </div>
