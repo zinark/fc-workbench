@@ -10,10 +10,14 @@ import {BreadCrumb} from "primereact/breadcrumb";
 import {Menu} from "primereact/menu";
 import CodeEditor from "../../fc-workbench/components/CodeEditor";
 import ScreenMobileView from "../../fc-workbench/components/ScreenMobileView";
+import {InputText} from "primereact/inputtext";
+import {InputTextarea} from "primereact/inputtextarea";
 
 const Workbench = () => {
     const router = useRouter()
     const [benchId, setBenchId] = useState(0)
+    const [benchTitle, setBenchTitle] = useState()
+    const [benchDescription, setBenchDescription] = useState()
     const [bench, setBench] = useState({
         title: 'undefined',
         screens: [],
@@ -224,18 +228,32 @@ const Workbench = () => {
     return (
         <>
             <BreadCrumb home={breadcrumbHome} model={breadcrumbItems}/>
-
             <div className="card">
-                <h2>{bench && bench.name}</h2>
+                <Menubar model={adapterMenuItems}></Menubar>
+                <Menubar model={screenMenuItems}></Menubar>
+
+                <h2>{bench && bench.title}</h2>
+
+                <InputText value={bench.title}
+                           onChange={e => {
+                               let modified = {...bench}
+                               modified.title = e.target.value
+                               setBench(modified)
+                           }}/>
+                <InputTextarea value={bench.description}
+                               onChange={e => {
+                                   let modified = {...bench}
+                                   modified.description = e.target.value
+                                   setBench(modified)
+                               }}/>
+
                 <TabView>
                     <TabPanel header={"Adapters (" + adapterCount + ")"}>
-                        <Menubar model={adapterMenuItems}></Menubar>
                         <div className="card">
                             <AdapterGrid></AdapterGrid>
                         </div>
                     </TabPanel>
                     <TabPanel header={"Screens (" + screenCount + ")"}>
-                        <Menubar model={screenMenuItems}></Menubar>
                         <div className="card">
                             <ScreenGrid></ScreenGrid>
                         </div>
