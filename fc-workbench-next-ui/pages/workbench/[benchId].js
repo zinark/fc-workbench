@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {WorkbenchService} from "../../fc-workbench/service/WorkbenchService";
 import {useRouter} from 'next/router'
 import {TabPanel, TabView} from "primereact/tabview";
 import {Menubar} from "primereact/menubar";
@@ -17,8 +16,6 @@ import WorkbenchController from "../../fc-workbench/controllers/WorkbenchControl
 const Workbench = () => {
     const router = useRouter()
     const [benchId, setBenchId] = useState(0)
-    const [benchTitle, setBenchTitle] = useState()
-    const [benchDescription, setBenchDescription] = useState()
     const [bench, setBench] = useState({
         title: 'undefined',
         screens: [],
@@ -45,7 +42,7 @@ const Workbench = () => {
     const screenMenuItems = [
         {
             label: 'New',
-            command: () => setBench (controller.newScreen(bench)),
+            command: () => setBench(controller.newScreen(bench)),
             icon: 'pi pi-fw pi-table',
         }
     ];
@@ -61,33 +58,32 @@ const Workbench = () => {
         },
     ];
 
-    const menuScreen = useRef(null);
 
     useEffect(() => {
         if (!router.query) return
         let {benchId} = router.query
         if (benchId === 0) return
-        WorkbenchService.getWorkbench(benchId).then(data => {
+
+        controller.getBench(benchId).then(data => {
             setBenchId(benchId)
             if (data) {
-                controller.setInitialBench(bench)
                 setBench(data)
                 if (data.screens) setScreenCount(data.screens.length)
                 if (data.adapters) setAdapterCount(data.adapters.length)
             }
-
-
         })
 
     }, [router, router.query]);
 
 
     useEffect(() => {
+        controller.setBench(bench)
         setBreadCrumbItems([
             {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
             {label: <Link href={"/workbench/" + benchId}> {bench.title} </Link>},
         ]);
-        controller.setBench(bench)
+        setScreenCount(bench.screens.length)
+        setAdapterCount(bench.adapters.length)
     }, [bench])
 
     const ScreenItem = (props) => {
@@ -103,40 +99,9 @@ const Workbench = () => {
 
 
     }
-    const ScreenGridView = (props) => {
-        let screen = props.screen
-        return <div className="card p-3 m-3 border-1 border-300 col-2">
-            <div className="flex justify-content-between align-items-center mb-5">
-                <Link href={"/screen/" + bench.id + "/" + screen.refNo}>
-                    <div className="text-2xl font-bold"> {screen.title} </div>
-                </Link>
-                <div>
-                    <Button type="button" icon="pi pi-ellipsis-v"
-                            key={screen.id}
-                            className="p-button-rounded p-button-text p-button-plain"
-                            onClick={(event) => menuScreen.current.toggle(event)}/>
-                    <Menu
-                        ref={menuScreen}
-                        key={screen.id}
-                        popup
-                        model={[
-                            {label: 'Add New', icon: 'pi pi-fw pi-plus'},
-                            {label: 'Remove', icon: 'pi pi-fw pi-minus'}
-                        ]}
-                    />
-                </div>
-            </div>
-
-            {screen.items && screen.items.length > 0 &&
-                <div>
-                    {screen.items.map(x => <ScreenItem item={x}/>)}
-                </div>
-            }
-        </div>
-    }
-
     const AdapterGridView = (props) => {
         let adapter = props.adapter
+        const menuScreen = useRef(null);
 
         return <div className="card p-5 m-5 border-1 border-300 col-5">
             <div className="flex justify-content-between align-items-center mb-5">
@@ -145,16 +110,19 @@ const Workbench = () => {
                 </Link>
                 <div>
                     <Button type="button" icon="pi pi-ellipsis-v"
-                            key={adapter.id}
+                            key={adapter.refNo}
                             className="p-button-rounded p-button-text p-button-plain"
                             onClick={(event) => menuScreen.current.toggle(event)}/>
                     <Menu
                         ref={menuScreen}
-                        key={adapter.id}
+                        key={adapter.refNo}
                         popup
                         model={[
-                            {label: 'Add New', icon: 'pi pi-fw pi-plus'},
-                            {label: 'Remove', icon: 'pi pi-fw pi-minus'}
+                            {
+                                label: 'Remove',
+                                icon: 'pi pi-fw pi-trash',
+                                command: () => setBench (controller.deleteAdapter(bench, adapter.refNo))
+                            }
                         ]}
                     />
                 </div>

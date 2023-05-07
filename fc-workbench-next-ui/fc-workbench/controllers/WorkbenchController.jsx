@@ -1,13 +1,10 @@
 import {WorkbenchService} from "../service/WorkbenchService";
 import {Utils} from "../service/Utils";
+import Enumerable from 'linq'
 
 class WorkbenchController {
     _initialBench;
     _bench;
-
-    setInitialBench(bench) {
-        this._initialBench = bench
-    }
 
     setBench(bench) {
         this._bench = bench
@@ -38,6 +35,31 @@ class WorkbenchController {
             requests: [],
             parts: []
         })
+        return modified
+    }
+
+    getBench(benchId) {
+        return WorkbenchService.getWorkbench(benchId)
+            .then(data => {
+                this._initialBench = data
+                return data
+            })
+    }
+
+    deleteAdapter(bench, refNo) {
+        let found = Enumerable.from(bench.adapters)
+            .where(x => x.refNo == refNo)
+            .firstOrDefault();
+
+        if (!found) {
+            alert('hata')
+            return
+        }
+
+        let modified = {...bench}
+        modified.adapters = Enumerable.from(modified.adapters)
+            .where(x => x.refNo != refNo)
+            .toArray()
         return modified
     }
 }
