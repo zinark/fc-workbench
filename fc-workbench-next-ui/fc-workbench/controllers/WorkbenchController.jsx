@@ -4,11 +4,6 @@ import Enumerable from 'linq'
 
 class WorkbenchController {
     _initialBench;
-    _bench;
-
-    setBench(bench) {
-        this._bench = bench
-    }
 
     saveBench(benchId, bench) {
         return WorkbenchService.changeWorkbench(benchId, bench);
@@ -61,6 +56,40 @@ class WorkbenchController {
             .where(x => x.refNo != refNo)
             .toArray()
         return modified
+    }
+
+    createAdapterRequest(benchId, bench, adapterRefNo) {
+        let modified = {...bench}
+
+        let adapter = Enumerable.from(modified.adapters)
+            .where(x => x.refNo == adapterRefNo)
+            .firstOrDefault();
+
+        if (!adapter) {
+            alert('hata')
+            return
+        }
+
+
+        if (!adapter.requests) adapter.request = []
+        adapter.requests.push({
+            code: 'new-code',
+            content: '{}',
+            contentType: 'application/json',
+            headers: {
+                'accept': "application/json",
+                'cache-control': "no-cache"
+            },
+            isCustomResponse: false,
+            method: 'GET',
+            refNo: Utils.Guid(),
+            url: '',
+            title: 'new-request-title'
+        })
+        return {
+            modifiedBench : modified,
+            modifiedAdapter : adapter
+        }
     }
 }
 

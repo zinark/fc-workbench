@@ -77,7 +77,6 @@ const Workbench = () => {
 
 
     useEffect(() => {
-        controller.setBench(bench)
         setBreadCrumbItems([
             {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
             {label: <Link href={"/workbench/" + benchId}> {bench.title} </Link>},
