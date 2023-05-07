@@ -12,6 +12,7 @@ import CodeEditor from "../../fc-workbench/components/CodeEditor";
 import ScreenMobileView from "../../fc-workbench/components/ScreenMobileView";
 import {InputText} from "primereact/inputtext";
 import {InputTextarea} from "primereact/inputtextarea";
+import WorkbenchController from "../../fc-workbench/controllers/WorkbenchController";
 
 const Workbench = () => {
     const router = useRouter()
@@ -28,42 +29,36 @@ const Workbench = () => {
     const [adapterCount, setAdapterCount] = useState(0)
     const breadcrumbHome = {icon: 'pi pi-home', to: '/'};
     const [breadcrumbItems, setBreadCrumbItems] = useState([])
+    const controller = new WorkbenchController()
 
+    const benchMenuItems = [
+        {
+            label: 'Save',
+            icon: 'pi pi-fw pi-save',
+            command: () => {
+                controller.saveBench(benchId, bench).then(data => {
+
+                })
+            }
+        }
+    ];
     const screenMenuItems = [
         {
             label: 'New',
+            command: () => setBench (controller.newScreen(bench)),
             icon: 'pi pi-fw pi-table',
-            items: [
-                {
-                    label: 'Screen',
-                    icon: 'pi pi-fw pi-plus',
-                }
-            ]
-        },
-        {
-            label: 'Save',
-            icon: 'pi pi-fw pi-save'
         }
     ];
     const adapterMenuItems = [
         {
             label: 'New',
-            icon: 'pi pi-fw pi-table',
-            items: [
-                {
-                    label: 'Adapter',
-                    icon: 'pi pi-fw pi-plus',
-                }
-            ]
+            command: () => setBench(controller.newAdapter(bench)),
+            icon: 'pi pi-fw pi-table'
         },
         {
             label: 'Import OpenApi',
             icon: 'pi pi-fw pi-file-import'
         },
-        {
-            label: 'Save',
-            icon: 'pi pi-fw pi-save'
-        }
     ];
 
     const menuScreen = useRef(null);
@@ -75,6 +70,7 @@ const Workbench = () => {
         WorkbenchService.getWorkbench(benchId).then(data => {
             setBenchId(benchId)
             if (data) {
+                controller.setInitialBench(bench)
                 setBench(data)
                 if (data.screens) setScreenCount(data.screens.length)
                 if (data.adapters) setAdapterCount(data.adapters.length)
@@ -91,6 +87,7 @@ const Workbench = () => {
             {label: <Link href={"/workbenchs"}> Workbenchs </Link>},
             {label: <Link href={"/workbench/" + benchId}> {bench.title} </Link>},
         ]);
+        controller.setBench(bench)
     }, [bench])
 
     const ScreenItem = (props) => {
@@ -229,33 +226,43 @@ const Workbench = () => {
         <>
             <BreadCrumb home={breadcrumbHome} model={breadcrumbItems}/>
             <div className="card">
-                <Menubar model={adapterMenuItems}></Menubar>
-                <Menubar model={screenMenuItems}></Menubar>
+                <Menubar model={benchMenuItems}></Menubar>
 
                 <h2>{bench && bench.title}</h2>
 
-                <InputText value={bench.title}
-                           onChange={e => {
-                               let modified = {...bench}
-                               modified.title = e.target.value
-                               setBench(modified)
-                           }}/>
-                <InputTextarea value={bench.description}
-                               onChange={e => {
-                                   let modified = {...bench}
-                                   modified.description = e.target.value
-                                   setBench(modified)
-                               }}/>
+                <div className="field grid col-12 p-fluid">
+                    <div className="col-12">
+                        <InputText value={bench.title}
+                                   onChange={e => {
+                                       let modified = {...bench}
+                                       modified.title = e.target.value
+                                       setBench(modified)
+                                   }}/>
+                    </div>
+                    <div className="col-12">
+                        <InputTextarea value={bench.description}
+                                       onChange={e => {
+                                           let modified = {...bench}
+                                           modified.description = e.target.value
+                                           setBench(modified)
+                                       }}/>
+
+                    </div>
+                </div>
 
                 <TabView>
                     <TabPanel header={"Adapters (" + adapterCount + ")"}>
                         <div className="card">
-                            <AdapterGrid></AdapterGrid>
+                            <Menubar model={adapterMenuItems}></Menubar>
+
+                            <AdapterGrid/>
                         </div>
                     </TabPanel>
+
                     <TabPanel header={"Screens (" + screenCount + ")"}>
                         <div className="card">
-                            <ScreenGrid></ScreenGrid>
+                            <Menubar model={screenMenuItems}></Menubar>
+                            <ScreenGrid/>
                         </div>
                     </TabPanel>
                     <TabPanel header="Parameters">

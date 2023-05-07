@@ -72,16 +72,16 @@ export const WorkbenchService = {
                 .then((res) => res.json())
                 .then((d) => d);
         },
-        changeWorkbench(id, title, description, parameters, adapters, screens) {
+        changeWorkbench(id, bench) {
             if (!id) throw new Error('id yollayin!');
 
             const body = {
                 id: id,
-                title: title,
-                description: description,
-                parameters: parameters,
-                adapters: JSON.stringify(adapters),
-                screens: JSON.stringify(screens)
+                title: bench.title,
+                description: bench.description,
+                parameters: bench.parameters,
+                adapters: JSON.stringify(bench.adapters),
+                screens: JSON.stringify(bench.screens)
             }
             return fetch(`${baseUrl()}/save-workbench`, {
                 method: 'POST',
